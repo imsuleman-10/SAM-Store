@@ -1,0 +1,295 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6,
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+::selection {
+  background-color: #c9a96e;
+  color: #ffffff;
+}
+
+/* ─── Announcement bar ───────────────────────────────────────────────────── */
+
+.announcement-bar {
+  background: #000000;
+  color: #ffffff;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px 16px;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  font-size: 11px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+.btn-primary:hover {
+  background: #333333;
+  border-color: #333333;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #000000;
+  border-color: #000000;
+}
+.btn-outline:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.btn-white {
+  background: #ffffff;
+  color: #000000;
+  border-color: #000000;
+}
+.btn-white:hover {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #000000;
+  border-color: transparent;
+}
+.btn-ghost:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+/* Keep backwards compat */
+.btn-secondary {
+  background: transparent;
+  color: #000000;
+  border-color: #000000;
+}
+.btn-secondary:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* ─── Hero Buttons (baroque.pk style) ───────────────────────── */
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 44px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  border-radius: 0;
+}
+
+/* White button — like baroque.pk "UNSTITCHED" */
+.hero-btn-white {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+.hero-btn-white:hover {
+  background: transparent;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Black button — like baroque.pk "STITCHED" */
+.hero-btn-black {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+.hero-btn-black:hover {
+  background: transparent;
+  color: #000000;
+  border-color: #000000;
+}
+
+/* ─── Form inputs ────────────────────────────────────────────────────────── */
+
+.input {
+  width: 100%;
+  padding: 13px 16px;
+  background: #ffffff;
+  border: 1px solid #d4cdc5;
+  border-radius: 0;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: #000000;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+}
+.input::placeholder {
+  color: #999999;
+}
+
+/* ─── Cards ──────────────────────────────────────────────────────────────── */
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e0dbd4;
+}
+
+/* ─── Badges ─────────────────────────────────────────────────────────────── */
+
+.badge-sale {
+  background: #c0392b;
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+}
+
+.badge-new {
+  background: #000000;
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+}
+
+/* ─── Product image overlay ──────────────────────────────────────────────── */
+
+.product-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.18);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.group:hover .product-overlay {
+  opacity: 1;
+}
+
+/* ─── Section utilities ──────────────────────────────────────────────────── */
+
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #999999;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Dividers ───────────────────────────────────────────────────────────── */
+
+.divider {
+  border: none;
+  border-top: 1px solid #e0dbd4;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── Icon buttons ───────────────────────────────────────────────────────── */
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 0;
+  color: inherit;
+}
+.icon-btn:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+/* ─── Miscellaneous ──────────────────────────────────────────────────────── */
+
+.text-muted {
+  color: #999999;
+}
+.font-mono-num {
+  font-family: 'IBM Plex Mono', monospace;
+}
+.soft-panel {
+  background: #f7f4ef;
+  border: 1px solid #e0dbd4;
+}
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
