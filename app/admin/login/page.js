@@ -23,14 +23,14 @@ export default function AdminLoginPage() {
       router.push('/admin/dashboard');
     } else {
       const data = await res.json();
-      setError(data.error || 'Login fail ho gaya.');
+      setError(data.error || 'Login failed. Please try again.');
     }
   }
 
   return (
     <main className="max-w-sm mx-auto px-6 py-28">
       <h1 className="font-display font-bold text-2xl mb-2 text-center">Admin Login</h1>
-      <p className="text-muted text-sm text-center mb-8">SAM&CO dashboard tak access ke liye password dalein.</p>
+      <p className="text-muted text-sm text-center mb-8">Enter your admin password to access the SAM&CO dashboard.</p>
       <form onSubmit={handleLogin} className="card p-6">
         <label className="text-xs text-muted mb-1.5 block">Admin Password</label>
         <input

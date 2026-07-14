@@ -55,7 +55,7 @@ export default function AdminDashboard() {
   }, [tab]);
 
   async function deleteProduct(id) {
-    if (!confirm('Is product ko delete karna chahte hain?')) return;
+    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
     await fetch(`/api/products/${id}`, { method: 'DELETE' });
     loadData();
   }
@@ -67,6 +67,45 @@ export default function AdminDashboard() {
       body: JSON.stringify({ status }),
     });
     loadData();
+  }
+
+  async function deleteOrder(id) {
+    if (!confirm('Are you sure you want to permanently delete this cancelled order? This action cannot be undone.')) return;
+    const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      loadData();
+    } else {
+      const data = await res.json();
+      alert(data.error || 'Failed to delete order.');
+    }
+  }
+
+  async function emailCustomer(order) {
+    if (!order.customer_email) {
+      alert("This order does not have an email address associated with it.");
+      return;
+    }
+    const msg = prompt(`Enter message to send to ${order.customer_name} (${order.customer_email}):`);
+    if (!msg) return;
+
+    setLoading(true);
+    const res = await fetch('/api/admin/email-customer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: order.id,
+        email: order.customer_email,
+        message: msg
+      })
+    });
+    setLoading(false);
+    
+    if (res.ok) {
+      alert('Email sent successfully!');
+    } else {
+      const data = await res.json();
+      alert(data.error || 'Failed to send email.');
+    }
   }
 
   async function saveSettings() {
@@ -221,8 +260,8 @@ export default function AdminDashboard() {
               <div className="flex h-48 items-center justify-center text-sm text-gray-400">Loading orders…</div>
             ) : orders.length === 0 ? (
               <div className="flex h-48 flex-col items-center justify-center gap-2">
-                <span className="text-3xl">📦</span>
-                <p className="text-sm text-gray-400">Koi order nahi aaya abhi.</p>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.4"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/></svg>
+                <p className="text-sm text-gray-400">No orders have been placed yet.</p>
               </div>
             ) : (
               <table className="w-full text-sm">
@@ -235,6 +274,7 @@ export default function AdminDashboard() {
                     <th className="px-5 py-3.5">Total</th>
                     <th className="px-5 py-3.5">Status</th>
                     <th className="px-5 py-3.5">Details</th>
+                    <th className="px-5 py-3.5">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -271,10 +311,30 @@ export default function AdminDashboard() {
                             {expandedOrder === o.id ? 'Hide ▲' : 'Items ▼'}
                           </button>
                         </td>
+                        <td className="px-5 py-4">
+                          <div className="flex gap-2 items-center">
+                            {o.customer_email && (
+                              <button
+                                onClick={() => emailCustomer(o)}
+                                className="rounded-md border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-semibold text-blue-600 hover:bg-blue-100 transition"
+                              >
+                                Email
+                              </button>
+                            )}
+                            {o.status === 'cancelled' && (
+                              <button
+                                onClick={() => deleteOrder(o.id)}
+                                className="rounded-md border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-semibold text-red-600 hover:bg-red-100 transition"
+                              >
+                                Delete
+                              </button>
+                            )}
+                          </div>
+                        </td>
                       </tr>
                       {expandedOrder === o.id && (
                         <tr key={o.id + '_expanded'}>
-                          <td colSpan={7} className="bg-gray-50 px-5 py-4">
+                          <td colSpan={8} className="bg-gray-50 px-5 py-4">
                             <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                               Order Items — {o.customer_address}
                             </p>
@@ -341,12 +401,16 @@ export default function AdminDashboard() {
                           <td className="px-5 py-3">
                             {media ? (
                               isVideo ? (
-                                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-100 text-lg">🎥</div>
+                                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-100">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                              </div>
                               ) : (
                                 <img src={media} alt={p.name} className="h-11 w-11 rounded-lg object-cover" />
                               )
                             ) : (
-                              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-100 text-xl">🧴</div>
+                              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-100">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                              </div>
                             )}
                           </td>
                           <td className="px-5 py-3 font-medium text-gray-900">{p.name}</td>
@@ -394,7 +458,7 @@ export default function AdminDashboard() {
                     {products.length === 0 && (
                       <tr>
                         <td colSpan={6} className="py-16 text-center text-sm text-gray-400">
-                          Koi product nahi hai abhi. Pehla product add karein! 🛍️
+                          No products in the catalogue yet. Add your first product to get started.
                         </td>
                       </tr>
                     )}
@@ -440,7 +504,7 @@ export default function AdminDashboard() {
                     onClick={saveSettings}
                     className="flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 transition"
                   >
-                    {settingsSaved ? '✓ Saved!' : 'Save Settings'}
+                    {settingsSaved ? 'Changes Saved' : 'Save Settings'}
                   </button>
                 </div>
               )}

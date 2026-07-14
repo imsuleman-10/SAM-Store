@@ -43,19 +43,25 @@ function SuccessContent() {
 
         {/* Info */}
         <div className="mb-8 space-y-3 text-sm leading-7 text-grey">
-          <p>Aapka order successfully place ho gaya hai. Hamari team aapko jald <strong className="text-black">call ya WhatsApp</strong> karay gi to confirm your order.</p>
+          <p>Your order has been successfully placed. Our team will contact you shortly via <strong className="text-black">call or WhatsApp</strong> to confirm your order and arrange delivery.</p>
           <p className="text-[11px] uppercase tracking-widest text-silver">Cash on Delivery · No Advance Payment</p>
         </div>
 
         {/* Trust row */}
         <div className="mb-8 grid grid-cols-3 gap-3 border border-border bg-sand py-5">
           {[
-            { icon: '🚚', text: 'Free Delivery' },
-            { icon: '💵', text: 'Pay on Delivery' },
-            { icon: '↩️', text: '7-Day Returns' },
+            { icon: (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8l5 3-5 3V8z"/></svg>
+            ), text: 'Free Delivery' },
+            { icon: (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            ), text: 'Pay on Delivery' },
+            { icon: (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+            ), text: '7-Day Returns' },
           ].map(b => (
             <div key={b.text} className="flex flex-col items-center gap-1.5">
-              <span className="text-xl">{b.icon}</span>
+              <span className="text-grey">{b.icon}</span>
               <span className="text-[9px] font-medium uppercase tracking-wider text-grey">{b.text}</span>
             </div>
           ))}

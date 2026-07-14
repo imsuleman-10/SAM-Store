@@ -10,12 +10,12 @@ const FOOTER_LINKS = {
     { label: 'Sale',         href: '/collections?cat=sale' },
   ],
   Help: [
-    { label: 'Contact Us',      href: '/contact' },
-    { label: 'Track Order',     href: '/track-order' },
-    { label: 'Return Policy',   href: '/policies/returns' },
-    { label: 'Shipping Info',   href: '/policies/shipping' },
-    { label: 'About Us',        href: '/about' },
+    { label: 'Contact Us',           href: '/contact' },
+    { label: 'Track Order',          href: '/track-order' },
+    { label: 'Shipping & Returns',   href: '/policies/shipping' },
+    { label: 'About Us',             href: '/about' },
   ],
+
 };
 
 export default function Footer() {

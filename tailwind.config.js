@@ -4,29 +4,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Core palette — baroque.pk inspired
-        black:  '#000000',
-        white:  '#ffffff',
-        sand:   '#f7f4ef',
-        stone:  '#ebe6df',
-        warm:   '#d4cdc5',
-        coal:   '#1a1a1a',
-        charcoal: '#333333',
-        grey:   '#6b6b6b',
-        silver: '#999999',
-        border: '#e0dbd4',
-        gold:   '#c9a96e',
-        goldlight: '#e8d5b0',
-        sale:   '#c0392b',
-        // Keep backwards compat aliases
-        ink:    '#000000',
-        inksoft:'#6b6b6b',
-        muted:  '#999999',
-        line:   '#e0dbd4',
-        bg:     '#f7f4ef',
-        paper:  '#ebe6df',
-        panel:  '#f0ece6',
-        rust:   '#c0392b',
+        // Premium Skincare & Beauty Palette
+        black:    '#0F1111',
+        white:    '#FFFFFF',
+        sand:     '#FAFAFA', // ultra-light clinical background
+        stone:    '#F2F2F2', // soft gray
+        warm:     '#E5E5E5',
+        coal:     '#1A1C1E',
+        charcoal: '#2D3134',
+        grey:     '#666666',
+        silver:   '#999999',
+        border:   '#EAEAEA',
+        gold:     '#C5A880', // premium champagne gold
+        goldlight:'#EBE2D5',
+        sage:     '#DCE3E0', // clinical/botanical subtle green
+        sale:     '#D14949', // softer premium red
+        // Backwards compat aliases
+        ink:      '#0F1111',
+        inksoft:  '#666666',
+        muted:    '#999999',
+        line:     '#EAEAEA',
+        bg:       '#FAFAFA',
+        paper:    '#F2F2F2',
+        panel:    '#F9F9F9',
+        rust:     '#D14949',
       },
       fontFamily: {
         display: ['"Cormorant Garamond"', 'Georgia', 'serif'],

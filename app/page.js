@@ -23,11 +23,6 @@ const CATEGORIES = [
     image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=800&q=80',
   },
   {
-    label: 'Beard Care',
-    tag: 'beard-care',
-    image: 'https://images.unsplash.com/photo-1621607512214-68297480165e?auto=format&fit=crop&w=800&q=80',
-  },
-  {
     label: 'Hair Care',
     tag: 'hair-care',
     image: 'https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=800&q=80',
@@ -35,13 +30,15 @@ const CATEGORIES = [
   {
     label: 'Body Care',
     tag: 'body-care',
-    image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    label: 'Best Sellers',
+    tag: 'bestsellers',
+    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80',
   },
 ];
 
-
-// ── Marquee text ─────────────────────────────────────────────
-const MARQUEE_TEXT = 'NEW ARRIVALS · FREE DELIVERY ACROSS PAKISTAN · PREMIUM GROOMING ESSENTIALS · CASH ON DELIVERY · EASY RETURNS · AUTHENTIC SAM&CO ·';
 
 // ── Feature icons ─────────────────────────────────────────────
 const FEATURES = [
@@ -83,8 +80,8 @@ const FEATURES = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     ),
-    title: '100% Authentic',
-    desc: 'Genuine SAM&CO products',
+    title: 'Dermatologist Tested',
+    desc: 'Safe & effective formulas',
   },
 ];
 
@@ -96,24 +93,10 @@ export default async function HomePage() {
     <div className="bg-white">
 
       {/* ══════════════════════════════════════════════════════════
-          HERO BANNER & MARQUEE (100vh Viewport)
+          HERO BANNER (100vh Viewport)
       ══════════════════════════════════════════════════════════ */}
       <div className="flex flex-col h-[100vh] -mt-[104px]">
         <HeroSlider />
-
-        {/* ══════════════════════════════════════════════════════════
-            MARQUEE STRIP
-        ══════════════════════════════════════════════════════════ */}
-        <div className="shrink-0 overflow-hidden border-y border-border bg-sand py-3">
-          <div className="flex animate-marquee whitespace-nowrap">
-            {/* Double the text for seamless loop */}
-            {[MARQUEE_TEXT, MARQUEE_TEXT].map((t, i) => (
-              <span key={i} className="mx-8 text-[10px] font-medium uppercase tracking-[0.28em] text-charcoal">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* ══════════════════════════════════════════════════════════
@@ -189,21 +172,21 @@ export default async function HomePage() {
       ══════════════════════════════════════════════════════════ */}
       <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1800&q=80"
-          alt="SAM&CO brand story"
+          src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1800&q=80"
+          alt="SAM&CO Clinical Care"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 max-w-2xl px-5 py-16 text-center md:px-8">
-          <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.4em] text-white/60">Our story</p>
+          <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.4em] text-white/80">Clinical Efficacy</p>
           <h2 className="mb-6 font-display text-4xl font-light leading-snug text-white md:text-5xl">
-            "Crafted with intention,<br/>groomed to perfection."
+            "Backed by science,<br/>crafted for your skin."
           </h2>
-          <p className="mx-auto mb-8 max-w-md text-sm leading-7 text-white/75">
-            Since 2020, SAM&amp;CO has been dedicated to creating premium grooming essentials that celebrate self-care and confidence.
+          <p className="mx-auto mb-8 max-w-md text-sm leading-7 text-white/90">
+            SAM&amp;CO integrates dermatological science with premium beauty. Our targeted treatments are formulated to restore your skin's natural balance and radiant glow.
           </p>
           <Link href="/collections" className="btn btn-white">
-            Explore the Story
+            Discover Our Science
           </Link>
         </div>
       </section>

@@ -1,16 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/components/CartContext';
 import Link from 'next/link';
 
 export default function CheckoutPage() {
-  const { cart, total, clearCart } = useCart();
+  const { cart, total, clearCart, user, authLoaded } = useCart();
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', phone: '', city: '', address: '' });
+  const [form, setForm] = useState({ name: '', phone: '', whatsapp: '', city: '', address: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (authLoaded && !user) {
+      router.push('/login?redirect=/checkout');
+    }
+  }, [user, authLoaded, router]);
+
+  if (!authLoaded || !user) {
+    return (
+      <div className="flex min-h-[70vh] flex-col items-center justify-center">
+        <span className="h-6 w-6 animate-spin rounded-full border-2 border-black border-t-transparent" />
+      </div>
+    );
+  }
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -29,8 +43,10 @@ export default function CheckoutPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         items: cart,
+        customer_email: user?.email,
         customer_name: form.name,
         customer_phone: form.phone,
+        customer_whatsapp: form.whatsapp,
         customer_city: form.city,
         customer_address: form.address,
         total,
@@ -103,6 +119,18 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <label className="mb-2 block text-[10px] font-medium uppercase tracking-widest text-grey">
+                    WhatsApp Number *
+                  </label>
+                  <input
+                    className="input"
+                    type="tel"
+                    value={form.whatsapp}
+                    onChange={(e) => update('whatsapp', e.target.value)}
+                    placeholder="03XX-XXXXXXX"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-[10px] font-medium uppercase tracking-widest text-grey">
                     City *
                   </label>
                   <input
@@ -163,7 +191,7 @@ export default function CheckoutPage() {
                       />
                     ) : (
                       <div className="flex h-14 w-11 shrink-0 items-center justify-center bg-stone">
-                        <span className="text-xl">🛍️</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.2"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7a4 4 0 00-8 0"/></svg>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">

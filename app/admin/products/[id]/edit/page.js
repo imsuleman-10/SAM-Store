@@ -68,7 +68,7 @@ export default function EditProductPage({ params }) {
 
   async function generateProductCopy() {
     if (!form.name && !form.description && !form.category && !form.price) {
-      setError('Product ka naam ya description chahiye taake AI use professional bana sake.');
+      setError('Please provide at least a product name or description so AI can generate professional copy.');
       return;
     }
     setGenerating(true);
@@ -215,7 +215,7 @@ export default function EditProductPage({ params }) {
       router.push('/admin/dashboard');
     } else {
       const data = await res.json();
-      setError(data.error || 'Kuch masla ho gaya.');
+      setError(data.error || 'Something went wrong. Please try again.');
     }
   }
 
@@ -245,7 +245,7 @@ export default function EditProductPage({ params }) {
             value={form.category || ''}
             onChange={(e) => update('category', e.target.value)}
           >
-            <option value="">-- Category Select Karein --</option>
+            <option value="">-- Select a Category --</option>
             <option value="face-care">Face Care</option>
             <option value="beard-care">Beard Care</option>
             <option value="hair-care">Hair Care</option>

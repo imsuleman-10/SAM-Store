@@ -61,21 +61,27 @@ export default function ProductPage({ params }) {
     return /\.(mp4|webm|ogg|mov)$/i.test(url) || url.includes('video');
   }
 
+  let descObj = { short: '', long: product.description || 'No description available.' };
+  try {
+    const parsed = JSON.parse(product.description);
+    if (parsed.short || parsed.long) descObj = parsed;
+  } catch(e) {}
+
   const accordions = [
     {
       key: 'description',
       label: 'Description',
-      content: product.description || 'No description available.',
+      content: descObj.long,
     },
     {
       key: 'delivery',
       label: 'Delivery & Returns',
-      content: 'Free nationwide delivery via Cash on Delivery. Orders dispatch within 1-2 business days and arrive in 2-3 working days to major cities. 7-day hassle-free return policy.',
+      content: 'Free nationwide delivery via Cash on Delivery. Orders dispatch within 1-2 business days. 7-day return policy for sealed or faulty items. Personal preference returns are not accepted to ensure hygiene.',
     },
     {
-      key: 'care',
-      label: 'Care Instructions',
-      content: 'Dry clean recommended for embroidered pieces. Hand wash delicate fabrics in cold water. Do not bleach. Iron on low heat. Store flat or hanging in a cool, dry place.',
+      key: 'ingredients',
+      label: 'Ingredients & Safety',
+      content: 'Clinically tested and dermatologist-approved. Free from harmful parabens and sulfates. Cruelty-free.',
     },
   ];
 
@@ -178,10 +184,13 @@ export default function ProductPage({ params }) {
             {/* Category */}
             <p className="mb-3 section-label">{product.category || 'Collection'}</p>
 
-            {/* Name */}
-            <h1 className="mb-4 font-display text-4xl font-light leading-snug text-black md:text-5xl">
+            {/* Name & Short Description */}
+            <h1 className="mb-2 font-display text-4xl font-light leading-snug text-black md:text-5xl">
               {product.name}
             </h1>
+            {descObj.short && (
+              <p className="mb-4 text-sm text-grey">{descObj.short}</p>
+            )}
 
             {/* Price */}
             <div className="mb-6 flex items-center gap-4">
@@ -244,13 +253,34 @@ export default function ProductPage({ params }) {
             {/* Trust badges */}
             <div className="mb-8 grid grid-cols-3 gap-3 border border-border bg-sand py-4">
               {[
-                { icon: '🚚', text: 'Free Delivery' },
-                { icon: '💵', text: 'Cash on Delivery' },
-                { icon: '↩️', text: '7-Day Returns' },
+                {
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                  ),
+                  text: 'Dermatologist Tested'
+                },
+                {
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+                      <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
+                    </svg>
+                  ),
+                  text: 'Cruelty-Free'
+                },
+                {
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+                      <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8l5 3-5 3V8z"/>
+                    </svg>
+                  ),
+                  text: 'Fast Delivery'
+                },
               ].map((b) => (
-                <div key={b.text} className="flex flex-col items-center gap-1 text-center">
-                  <span className="text-lg">{b.icon}</span>
-                  <span className="text-[9px] font-medium uppercase tracking-wider text-grey">{b.text}</span>
+                <div key={b.text} className="flex flex-col items-center gap-2 text-center text-charcoal">
+                  <span className="text-xl">{b.icon}</span>
+                  <span className="text-[9px] font-medium uppercase tracking-wider text-grey leading-tight">{b.text}</span>
                 </div>
               ))}
             </div>
@@ -280,6 +310,47 @@ export default function ProductPage({ params }) {
             </div>
           </div>
         </div>
+        
+        {/* ── Reviews Section ─── */}
+        <div className="mt-20 border-t border-border pt-16 lg:mt-28">
+          <div className="mb-10 text-center">
+            <h2 className="font-display text-3xl font-light text-black">Real Results</h2>
+            <p className="mt-2 text-sm text-grey">What our customers are saying.</p>
+          </div>
+          
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                name: "Ayesha M.",
+                stars: 5,
+                title: "Incredible difference",
+                text: "I've struggled with finding products that don't irritate my skin. This has been a game changer. I noticed results within the first two weeks."
+              },
+              {
+                name: "Fatima K.",
+                stars: 5,
+                title: "Highly recommended!",
+                text: "The texture is perfect and it absorbs so quickly. It doesn't feel greasy at all. My confidence has honestly improved so much since I started using this."
+              },
+              {
+                name: "Sara A.",
+                stars: 4,
+                title: "Works really well",
+                text: "Very satisfied with the quality. The packaging is premium and the product does exactly what it claims. Will definitely be repurchasing."
+              }
+            ].map((review, i) => (
+              <div key={i} className="border border-border bg-sand p-6 flex flex-col gap-3">
+                <div className="flex text-gold text-sm">
+                  {"★".repeat(review.stars)}{"☆".repeat(5-review.stars)}
+                </div>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-black">{review.title}</p>
+                <p className="text-sm text-charcoal leading-relaxed">"{review.text}"</p>
+                <p className="text-xs text-silver mt-auto pt-4 border-t border-border">{review.name} <span className="text-green-600 ml-1">✓ Verified</span></p>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );

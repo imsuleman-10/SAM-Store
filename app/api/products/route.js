@@ -29,7 +29,7 @@ export async function POST(request) {
   const { name, description, category, price, compare_at_price, image_url, stock, media_urls } = body;
 
   if (!name || !price) {
-    return NextResponse.json({ error: 'Naam aur price zaroori hain.' }, { status: 400 });
+    return NextResponse.json({ error: 'Product name and price are required fields.' }, { status: 400 });
   }
 
   const { data, error } = await supabaseAdmin
