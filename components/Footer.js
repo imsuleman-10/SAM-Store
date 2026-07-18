@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { getStoreSettings } from '@/lib/storeSettings';
+import NewsletterForm from '@/components/NewsletterForm';
 
 const FOOTER_LINKS = {
   Collections: [
@@ -15,10 +17,11 @@ const FOOTER_LINKS = {
     { label: 'Shipping & Returns',   href: '/policies/shipping' },
     { label: 'About Us',             href: '/about' },
   ],
-
 };
 
-export default function Footer() {
+export default async function Footer() {
+  const { store_phone, store_email, store_address } = await getStoreSettings();
+
   return (
     <footer className="bg-coal text-white">
       {/* ── Main footer content ─── */}
@@ -27,10 +30,35 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <div className="mb-5 font-display text-2xl font-light tracking-[0.35em]">SAM&amp;CO</div>
+            <div className="mb-5 font-display text-2xl font-light tracking-[0.35em]">Glowvie</div>
             <p className="mb-6 text-sm leading-7 text-warm/70">
               Premium beauty and grooming essentials crafted for the modern individual. Quality you can trust, delivered to your doorstep.
             </p>
+
+            {/* Dynamic contact info */}
+            {(store_phone || store_email || store_address) && (
+              <div className="mb-6 space-y-2 border-t border-white/10 pt-5">
+                {store_address && (
+                  <div className="flex items-start gap-2 text-sm text-warm/70">
+                    <span className="mt-0.5 shrink-0">📍</span>
+                    <span>{store_address}</span>
+                  </div>
+                )}
+                {store_phone && (
+                  <div className="flex items-center gap-2 text-sm text-warm/70">
+                    <span>📞</span>
+                    <a href={`tel:${store_phone}`} className="hover:text-white transition">{store_phone}</a>
+                  </div>
+                )}
+                {store_email && (
+                  <div className="flex items-center gap-2 text-sm text-warm/70">
+                    <span>✉️</span>
+                    <a href={`mailto:${store_email}`} className="hover:text-white transition">{store_email}</a>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Social icons */}
             <div className="flex items-center gap-3">
               {[
@@ -88,14 +116,7 @@ export default function Footer() {
           <div>
             <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-warm/50">Stay Updated</p>
             <p className="mb-5 text-sm leading-7 text-warm/70">Subscribe for exclusive deals and new arrivals.</p>
-            <div className="flex flex-col gap-2">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="border border-white/20 bg-transparent px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition focus:border-white/60"
-              />
-              <button className="btn btn-white text-[10px]">Subscribe</button>
-            </div>
+            <NewsletterForm />
           </div>
         </div>
       </div>
@@ -103,7 +124,7 @@ export default function Footer() {
       {/* ── Bottom bar ─── */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-4 px-5 py-5 text-[10px] uppercase tracking-[0.2em] text-warm/40 md:flex-row md:px-8 lg:px-12">
-          <span>© {new Date().getFullYear()} SAM&amp;CO. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Glowvie. All rights reserved.</span>
           <div className="flex items-center gap-4">
             <span>Cash on Delivery</span>
             <span className="text-white/20">|</span>

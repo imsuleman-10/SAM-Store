@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { cookies } from 'next/headers';
 
-function requireAdmin() {
-  const session = cookies().get('baroque_admin_session');
+async function requireAdmin() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get('baroque_admin_session');
   return session && session.value === 'valid';
 }
 
@@ -113,7 +114,7 @@ async function callGroqAI(prompt, apiKey) {
 }
 
 export async function POST(request) {
-  if (!requireAdmin()) {
+  if (!(await requireAdmin())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

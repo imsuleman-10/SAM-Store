@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function AdminLoginPage() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,7 @@ export default function AdminLoginPage() {
     const res = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     });
     setLoading(false);
     if (res.ok) {
@@ -28,23 +30,59 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="max-w-sm mx-auto px-6 py-28">
-      <h1 className="font-display font-bold text-2xl mb-2 text-center">Admin Login</h1>
-      <p className="text-muted text-sm text-center mb-8">Enter your admin password to access the SAM&CO dashboard.</p>
-      <form onSubmit={handleLogin} className="card p-6">
-        <label className="text-xs text-muted mb-1.5 block">Admin Password</label>
-        <input
-          type="password"
-          className="input mb-4"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
-        />
-        {error && <p className="text-rust text-sm mb-4">{error}</p>}
-        <button className="btn btn-primary w-full justify-center" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-    </main>
+    <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 bg-white">
+      <div className="w-full max-w-md border border-border p-8 md:p-10">
+        <p className="section-label mb-3 text-center">Admin</p>
+        <h1 className="mb-8 font-display text-3xl font-light text-center text-black">Log In</h1>
+
+        {error && (
+          <div className="mb-6 border border-red-200 bg-red-50 p-3 text-sm text-red-700 text-center">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label className="mb-2 block text-[10px] font-medium uppercase tracking-widest text-grey">
+              Email Address *
+            </label>
+            <input
+              type="email"
+              required
+              className="input w-full"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@example.com"
+            />
+          </div>
+          <div>
+            <label className="mb-2 block text-[10px] font-medium uppercase tracking-widest text-grey">
+              Password *
+            </label>
+            <input
+              type="password"
+              required
+              className="input w-full"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary w-full"
+          >
+            {loading ? 'Logging in...' : 'Log In'}
+          </button>
+        </form>
+
+        <div className="mt-8 text-center text-sm text-grey">
+          <Link href="/staff/login" className="text-black underline underline-offset-4 hover:text-black/70">
+            Staff Login
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }

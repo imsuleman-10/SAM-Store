@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabaseClient';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
+import NewsletterForm from '@/components/NewsletterForm';
 import HeroSlider from '@/components/HeroSlider';
 
 export const revalidate = 0;
@@ -15,32 +17,97 @@ async function getProducts() {
   return data;
 }
 
-// ── Category tiles ───────────────────────────────────────────
+async function getHeroSlides() {
+  if (!supabaseAdmin) return [];
+  const { data, error } = await supabaseAdmin
+    .from('hero_slides')
+    .select('id, image_url, heading, subtitle, link_url, video_url')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+  if (error) return [];
+  return (data || []).map(slide => ({
+    id: slide.id,
+    image: slide.image_url,
+    heading: slide.heading,
+    sub: slide.subtitle,
+    link: slide.link_url || '/collections',
+    videoUrl: slide.video_url,
+  }));
+}
+
 const CATEGORIES = [
   {
     label: 'Face Care',
     tag: 'face-care',
-    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80',
+    desc: 'Brightening & Anti-Aging',
   },
   {
     label: 'Hair Care',
     tag: 'hair-care',
-    image: 'https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80',
+    desc: 'Nourish & Strengthen',
   },
   {
     label: 'Body Care',
     tag: 'body-care',
-    image: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=800&q=80',
+    desc: 'Hydrate & Restore',
   },
   {
     label: 'Best Sellers',
     tag: 'bestsellers',
-    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80',
+    desc: 'Top Rated Products',
+  },
+];
+
+const RESULTS = [
+  {
+    product: 'DermiVe Face Wash',
+    tag: 'Clearer Skin',
+    before: '/images/results/dermive-before.png',
+    after:  '/images/results/dermive-after.png',
+    desc: 'Visible reduction in acne & excess oil in just 2 weeks of use.',
+    days: '14 Days',
+  },
+  {
+    product: 'Roots Hair Serum',
+    tag: 'Stronger Hair',
+    before: '/images/results/roots-before.png',
+    after:  '/images/results/roots-after.png',
+    desc: 'Reduced hair fall & visibly thicker, shinier hair in 3 weeks.',
+    days: '21 Days',
+  },
+  {
+    product: 'Markaway Serum',
+    tag: 'Faded Marks',
+    before: '/images/results/markaway-before.png',
+    after:  '/images/results/markaway-after.png',
+    desc: 'Stretch marks & scars visibly diminished with consistent use.',
+    days: '30 Days',
   },
 ];
 
 
-// ── Feature icons ─────────────────────────────────────────────
+const VIDEOS = [
+  {
+    title: 'DermiVe Skin Transformation',
+    sub: 'Real Customer Results',
+    videoId: 'l3bZFuBNrpA',
+  },
+  {
+    title: 'Roots Hair Treatment Guide',
+    sub: 'How to Apply & Use',
+    videoId: 'Y3HpP4-KPKA',
+  },
+  {
+    title: 'Zafrani Beauty Cream',
+    sub: 'Glow in 7 Days',
+    videoId: '6mFY2PCJSF8',
+  },
+];
+
 const FEATURES = [
   {
     icon: (
@@ -88,20 +155,33 @@ const FEATURES = [
 
 export default async function HomePage() {
   const products = await getProducts();
+  const slides = await getHeroSlides();
 
   return (
     <div className="bg-white">
 
-      {/* ══════════════════════════════════════════════════════════
-          HERO BANNER (100vh Viewport)
-      ══════════════════════════════════════════════════════════ */}
-      <div className="flex flex-col h-[100vh] -mt-[104px]">
-        <HeroSlider />
+      <div className="flex flex-col h-[100vh] -mt-[104px] bg-black">
+        <HeroSlider initialSlides={slides} />
       </div>
 
-      {/* ══════════════════════════════════════════════════════════
-          CATEGORY GRID
-      ══════════════════════════════════════════════════════════ */}
+      <section className="border-b border-border bg-white">
+        <div className="mx-auto max-w-screen-xl px-5 py-10 md:px-8 lg:px-12">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border text-charcoal">
+                  {f.icon}
+                </div>
+                <div>
+                  <p className="mb-0.5 text-[11px] font-semibold uppercase tracking-widest text-black">{f.title}</p>
+                  <p className="text-xs text-grey">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-screen-xl px-5 py-16 md:px-8 lg:px-12 lg:py-20">
         <div className="mb-10 text-center">
           <p className="section-label mb-3">Browse by category</p>
@@ -115,7 +195,6 @@ export default async function HomePage() {
               href={`/collections?cat=${cat.tag}`}
               className="group relative overflow-hidden"
             >
-              {/* Image */}
               <div className="aspect-[3/4] overflow-hidden bg-stone">
                 <img
                   src={cat.image}
@@ -123,11 +202,11 @@ export default async function HomePage() {
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                 />
               </div>
-              {/* Label overlay */}
-              <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 via-transparent p-5">
+              <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-black/10 p-5">
                 <div>
                   <p className="font-display text-xl font-light tracking-wide text-white">{cat.label}</p>
-                  <p className="mt-1 text-[10px] uppercase tracking-widest text-white/70 transition group-hover:text-gold">
+                  <p className="mt-0.5 text-[10px] uppercase tracking-widest text-white/60">{cat.desc}</p>
+                  <p className="mt-2 text-[10px] uppercase tracking-widest text-white/70 transition group-hover:text-white">
                     Shop now →
                   </p>
                 </div>
@@ -137,9 +216,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════
-          FEATURED PRODUCTS
-      ══════════════════════════════════════════════════════════ */}
       <section className="border-t border-border bg-sand py-16 lg:py-20">
         <div className="mx-auto max-w-screen-xl px-5 md:px-8 lg:px-12">
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -167,44 +243,73 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════
-          BRAND STORY BANNER
-      ══════════════════════════════════════════════════════════ */}
-      <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=1800&q=80"
-          alt="SAM&CO Clinical Care"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 max-w-2xl px-5 py-16 text-center md:px-8">
-          <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.4em] text-white/80">Clinical Efficacy</p>
-          <h2 className="mb-6 font-display text-4xl font-light leading-snug text-white md:text-5xl">
-            "Backed by science,<br/>crafted for your skin."
-          </h2>
-          <p className="mx-auto mb-8 max-w-md text-sm leading-7 text-white/90">
-            SAM&amp;CO integrates dermatological science with premium beauty. Our targeted treatments are formulated to restore your skin's natural balance and radiant glow.
-          </p>
-          <Link href="/collections" className="btn btn-white">
-            Discover Our Science
-          </Link>
+      <section className="bg-white py-16 lg:py-24">
+        <div className="mx-auto max-w-screen-xl px-5 md:px-8 lg:px-12">
+          <div className="mb-12 text-center">
+            <p className="section-label mb-3">Proven Results</p>
+            <h2 className="section-title text-3xl text-black md:text-4xl">Real People. Real Results.</h2>
+            <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-grey">
+              Our customers share their transformation journeys using Glowvie products. No filters, no edits — just real skin.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {RESULTS.map((r) => (
+              <div key={r.product} className="group">
+                <div className="relative mb-5 grid grid-cols-2 gap-1 overflow-hidden">
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    <img src={r.before} alt={`Before ${r.product}`} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                    <span className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-white">Before</span>
+                  </div>
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    <img src={r.after} alt={`After ${r.product}`} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                    <span className="absolute bottom-2 left-2 bg-white/90 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-black">After</span>
+                  </div>
+                  <span className="absolute right-2 top-2 bg-black px-2.5 py-1 text-[9px] font-semibold uppercase tracking-widest text-white">
+                    {r.days}
+                  </span>
+                </div>
+                <span className="mb-1 inline-block text-[9px] font-semibold uppercase tracking-[0.2em] text-gold">{r.tag}</span>
+                <h3 className="mb-1 font-display text-lg font-light text-black">{r.product}</h3>
+                <p className="text-xs leading-6 text-grey">{r.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link href="/collections" className="btn btn-primary inline-flex">
+              Shop All Products
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════
-          FEATURES STRIP
-      ══════════════════════════════════════════════════════════ */}
-      <section className="border-t border-border bg-white">
-        <div className="mx-auto max-w-screen-xl px-5 py-14 md:px-8 lg:px-12">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="flex flex-col items-center gap-4 text-center">
-                <div className="flex h-14 w-14 items-center justify-center border border-border text-charcoal">
-                  {f.icon}
+      <section className="border-t border-border bg-sand py-16 lg:py-24">
+        <div className="mx-auto max-w-screen-xl px-5 md:px-8 lg:px-12">
+          <div className="mb-12 text-center">
+            <p className="section-label mb-3">Watch & Learn</p>
+            <h2 className="section-title text-3xl text-black md:text-4xl">See the Magic Happen</h2>
+            <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-grey">
+              Watch how our products work, application tips, and real customer reviews.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {VIDEOS.map((v) => (
+              <div key={v.videoId} className="group overflow-hidden bg-white shadow-soft">
+                <div className="relative aspect-video overflow-hidden bg-black">
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${v.videoId}?rel=0&modestbranding=1`}
+                    title={v.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="h-full w-full border-0"
+                    loading="lazy"
+                  />
                 </div>
-                <div>
-                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-black">{f.title}</p>
-                  <p className="text-sm text-grey">{f.desc}</p>
+                <div className="p-4">
+                  <p className="mb-0.5 text-[10px] font-medium uppercase tracking-widest text-gold">{v.sub}</p>
+                  <p className="font-display text-lg font-light text-black">{v.title}</p>
                 </div>
               </div>
             ))}
@@ -212,9 +317,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════
-          NEWSLETTER BANNER
-      ══════════════════════════════════════════════════════════ */}
+      <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=1800&q=80"
+          alt="Glowvie Clinical Care"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 max-w-2xl px-5 py-16 text-center md:px-8">
+          <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.4em] text-white/80">Clinical Efficacy</p>
+          <h2 className="mb-6 font-display text-4xl font-light leading-snug text-white md:text-5xl">
+            "Backed by science,<br/>crafted for your skin."
+          </h2>
+          <p className="mx-auto mb-8 max-w-md text-sm leading-7 text-white/90">
+            Glowvie integrates dermatological science with premium beauty. Our targeted treatments are formulated to restore your skin's natural balance and radiant glow.
+          </p>
+          <Link href="/collections" className="btn btn-white">
+            Discover Our Science
+          </Link>
+        </div>
+      </section>
+
       <section className="bg-coal py-16 lg:py-20">
         <div className="mx-auto max-w-2xl px-5 text-center md:px-8">
           <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.35em] text-white/50">
@@ -224,18 +347,11 @@ export default async function HomePage() {
             Be the first to know
           </h2>
           <p className="mb-8 text-sm leading-7 text-white/60">
-            Subscribe to get exclusive early access to new collections, seasonal sales, and styling tips.
+            Subscribe to get exclusive early access to new collections, seasonal sales, and skincare tips.
           </p>
-          <form className="flex flex-col gap-3 sm:flex-row" method="post" action="#">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="flex-1 border border-white/20 bg-transparent px-5 py-4 text-sm text-white placeholder-white/30 outline-none focus:border-white/60"
-            />
-            <button type="submit" className="btn btn-white shrink-0">
-              Subscribe
-            </button>
-          </form>
+          <div className="mx-auto max-w-md text-left">
+            <NewsletterForm />
+          </div>
         </div>
       </section>
     </div>

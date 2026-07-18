@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { cookies } from 'next/headers';
+import { getAdminSession } from '@/lib/authHelper';
 
 // GET /api/products — public, anyone can list products (used by the storefront)
 export async function GET() {
@@ -16,9 +16,13 @@ export async function GET() {
 
 // POST /api/products — admin only, creates a new product
 export async function POST(request) {
-  const session = cookies().get('baroque_admin_session');
-  if (!session || session.value !== 'valid') {
+  const session = await getAdminSession();
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (session.role === 'manager' && !session.permissions?.all_products) {
+    return NextResponse.json({ error: 'Forbidden: You do not have permission to create products.' }, { status: 403 });
   }
 
   if (!supabaseAdmin) {

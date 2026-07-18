@@ -11,9 +11,17 @@ export function middleware(request) {
     }
   }
 
+  if (pathname.startsWith('/staff') && pathname !== '/staff/login') {
+    const session = request.cookies.get('staff_session');
+    if (!session || !session.value) {
+      const loginUrl = new URL('/staff/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/staff/:path*'],
 };

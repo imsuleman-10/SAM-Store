@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'About Us — SAM&CO',
-  description: 'The story behind SAM&CO, Pakistan\'s premium grooming and beauty brand.',
+  title: 'About Us — Glowvie',
+  description: 'The story behind Glowvie, Pakistan\'s premium grooming and beauty brand.',
 };
 
 export default function AboutPage() {
@@ -10,7 +10,7 @@ export default function AboutPage() {
       <section className="relative flex h-[50vh] min-h-[400px] items-center justify-center overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=1800&q=80"
-          alt="About SAM&CO"
+          alt="About Glowvie"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" />
@@ -26,13 +26,13 @@ export default function AboutPage() {
         
         <div className="space-y-6 text-grey text-sm md:text-base leading-relaxed text-center">
           <p>
-            Founded with a vision to bring premium, high-quality grooming and beauty essentials to Pakistan, <strong className="text-black font-medium">SAM&CO</strong> is more than just a brand—it's a lifestyle. We believe that self-care is not a luxury, but a necessity, and everyone deserves products that look elegant and deliver real results.
+            Founded with a vision to bring premium, high-quality grooming and beauty essentials to Pakistan, <strong className="text-black font-medium">Glowvie</strong> is more than just a brand—it's a lifestyle. We believe that self-care is not a luxury, but a necessity, and everyone deserves products that look elegant and deliver real results.
           </p>
           <p>
             From our signature Face Care formulations to our meticulously crafted Beard Oils, every product in our lineup is designed with modern aesthetics and supreme functionality in mind. We source the finest ingredients to ensure that your skin and hair receive the nourishment they deserve.
           </p>
           <p>
-            At SAM&CO, we take pride in our uncompromising standards. Whether you're preparing for a boardroom meeting or winding down after a long day, our products are built to elevate your routine. We are committed to transparency, quality, and an exceptional customer experience.
+            At Glowvie, we take pride in our uncompromising standards. Whether you're preparing for a boardroom meeting or winding down after a long day, our products are built to elevate your routine. We are committed to transparency, quality, and an exceptional customer experience.
           </p>
         </div>
 

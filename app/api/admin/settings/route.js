@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { cookies } from 'next/headers';
-
-function requireAdmin() {
-  const session = cookies().get('baroque_admin_session');
-  return session && session.value === 'valid';
-}
+import { getAdminSession } from '@/lib/authHelper';
 
 export async function GET() {
-  if (!requireAdmin()) {
+  const session = await getAdminSession();
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -16,12 +12,16 @@ export async function GET() {
     return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY missing' }, { status: 500 });
   }
 
-  const { data, error } = await supabaseAdmin.from('settings').select('*');
+  const { data, error } = await supabaseAdmin
+    .from('settings')
+    .select('*');
+
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   const settings = {};
+  // Last row per key wins (DB returns in insertion order)
   (data || []).forEach((item) => {
     settings[item.key] = item.value;
   });
@@ -30,7 +30,8 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!requireAdmin()) {
+  const session = await getAdminSession();
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -39,18 +40,26 @@ export async function POST(request) {
   }
 
   const body = await request.json();
-  const entries = Object.entries(body || {}).map(([key, value]) => ({ key, value: String(value || '') }));
+  const keys = Object.keys(body || {});
+  const entries = keys.map((key) => ({ key, value: String(body[key] || '') }));
 
   if (entries.length === 0) {
     return NextResponse.json({ error: 'No settings provided.' }, { status: 400 });
   }
 
-  const { error } = await supabaseAdmin
-    .from('settings')
-    .upsert(entries, { onConflict: ['key'] });
+  // For each key, try update first; if no row exists, insert
+  for (const { key, value } of entries) {
+    const { data: existing } = await supabaseAdmin
+      .from('settings')
+      .select('key')
+      .eq('key', key)
+      .maybeSingle();
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (existing) {
+      await supabaseAdmin.from('settings').update({ value, updated_at: new Date().toISOString() }).eq('key', key);
+    } else {
+      await supabaseAdmin.from('settings').insert({ key, value });
+    }
   }
 
   return NextResponse.json({ success: true });

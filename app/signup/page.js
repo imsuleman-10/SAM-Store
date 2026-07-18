@@ -19,12 +19,57 @@ export default function SignupPage() {
   const [whatsapp, setWhatsapp] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
   
   // UI States
   const [step, setStep] = useState(1); // 1 = Details, 2 = OTP
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Helpers
+  async function compressImage(file, maxSizeKB) {
+    if (file.size <= maxSizeKB * 1024) return file;
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let { width, height } = img;
+          const MAX_SIZE = 800;
+          if (width > height && width > MAX_SIZE) {
+            height *= MAX_SIZE / width;
+            width = MAX_SIZE;
+          } else if (height > MAX_SIZE) {
+            width *= MAX_SIZE / height;
+            height = MAX_SIZE;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          let quality = 0.9;
+          const compress = () => {
+            canvas.toBlob((blob) => {
+              if (blob.size <= maxSizeKB * 1024 || quality <= 0.1) {
+                const newName = file.name.replace(/\.[^/.]+$/, ".jpg");
+                resolve(new File([blob], newName, { type: 'image/jpeg', lastModified: Date.now() }));
+              } else {
+                quality -= 0.1;
+                compress();
+              }
+            }, 'image/jpeg', quality);
+          };
+          compress();
+        };
+      };
+    });
+  }
 
   // Step 1: Request Signup
   async function handleSignupRequest(e) {
@@ -33,10 +78,38 @@ export default function SignupPage() {
     setError('');
     setMessage('');
 
+    let avatar_url = null;
+    if (avatarFile) {
+      setMessage('Uploading image...');
+      try {
+        const compressedFile = await compressImage(avatarFile, 150);
+        const formData = new FormData();
+        formData.append('image', compressedFile);
+        formData.append('folder', 'customers');
+        
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadData.url) {
+          avatar_url = uploadData.url;
+        } else {
+          throw new Error(uploadData.error || 'Failed to upload image');
+        }
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+        return;
+      }
+    }
+
+    setMessage('Sending code...');
+
     const res = await fetch('/api/auth/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name, whatsapp })
+      body: JSON.stringify({ email, password, name, whatsapp, avatar_url })
     });
     
     const data = await res.json();
@@ -113,6 +186,33 @@ export default function SignupPage() {
         {step === 1 ? (
           // ── STEP 1: REGISTRATION FORM ──
           <form onSubmit={handleSignupRequest} className="space-y-6">
+            <div className="flex flex-col items-center justify-center mb-6">
+              <div className="relative w-24 h-24 mb-3 group rounded-full border border-dashed border-gray-300 flex items-center justify-center bg-gray-50 overflow-hidden cursor-pointer">
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                )}
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-white text-[10px] font-semibold uppercase tracking-widest">Upload</span>
+                </div>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setAvatarFile(file);
+                      setAvatarPreview(URL.createObjectURL(file));
+                    }
+                  }} 
+                  className="absolute inset-0 opacity-0 cursor-pointer" 
+                />
+              </div>
+              <label className="text-[10px] font-medium uppercase tracking-widest text-grey">
+                Profile Picture
+              </label>
+            </div>
             <div>
               <label className="mb-2 block text-[10px] font-medium uppercase tracking-widest text-grey">
                 Full Name *

@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { cookies } from 'next/headers';
+import { getAdminSession } from '@/lib/authHelper';
 import nodemailer from 'nodemailer';
 
 // GET /api/orders — admin only, list all orders
 export async function GET() {
-  const session = cookies().get('baroque_admin_session');
-  if (!session || session.value !== 'valid') {
+  const session = await getAdminSession();
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -59,12 +59,12 @@ export async function POST(request) {
       let itemsHtml = items.map(item => `<li>${item.name} (x${item.qty}) - Rs ${(item.price * item.qty).toLocaleString()}</li>`).join('');
 
       await transporter.sendMail({
-        from: `"SAM&CO" <${process.env.GMAIL_USER}>`,
+        from: `"Glowvie" <${process.env.GMAIL_USER}>`,
         to: customer_email,
         subject: `Order Confirmed #${data.id.slice(0,8).toUpperCase()}`,
         html: `
           <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #ffffff; text-align: center; border: 1px solid #eaeaea;">
-            <h1 style="font-size: 24px; font-weight: 300; letter-spacing: 4px; color: #000000; margin-bottom: 30px;">SAM&CO</h1>
+            <h1 style="font-size: 24px; font-weight: 300; letter-spacing: 4px; color: #000000; margin-bottom: 30px;">Glowvie</h1>
             <p style="font-size: 14px; color: #666666; margin-bottom: 30px;">Hi ${customer_name},</p>
             <p style="font-size: 14px; color: #666666; margin-bottom: 30px;">Thank you for your order! Your order has been successfully placed and will be dispatched soon.</p>
             <div style="background-color: #f9f9f9; border: 1px solid #eaeaea; padding: 20px; margin-bottom: 30px; text-align: left;">

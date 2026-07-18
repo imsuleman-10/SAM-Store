@@ -1,0 +1,8 @@
+{
+  "dermive_before": "https://aakirxxeskfynblmgwzf.supabase.co/storage/v1/object/public/images/results/dermive-before.png",
+  "dermive_after": "https://aakirxxeskfynblmgwzf.supabase.co/storage/v1/object/public/images/results/dermive-after.png",
+  "roots_before": "https://aakirxxeskfynblmgwzf.supabase.co/storage/v1/object/public/images/results/roots-before.png",
+  "roots_after": "https://aakirxxeskfynblmgwzf.supabase.co/storage/v1/object/public/images/results/roots-after.png",
+  "markaway_before": "https://aakirxxeskfynblmgwzf.supabase.co/storage/v1/object/public/images/results/markaway-before.png",
+  "markaway_after": "https://aakirxxeskfynblmgwzf.supabase.co/storage/v1/object/public/images/results/markaway-after.png"
+}

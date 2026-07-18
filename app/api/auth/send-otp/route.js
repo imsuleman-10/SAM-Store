@@ -11,7 +11,7 @@ const supabase = createClient(
 
 export async function POST(request) {
   try {
-    const { email, password, name, whatsapp } = await request.json();
+    const { email, password, name, whatsapp, avatar_url } = await request.json();
 
     if (!email || !password || !name) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -45,7 +45,8 @@ export async function POST(request) {
         email_confirm: false,
         user_metadata: {
           full_name: name,
-          whatsapp,
+          phone: whatsapp,
+          avatar_url: avatar_url || null,
           pending_otp: otpCode,
           otp_expires: expires,
         }
@@ -68,12 +69,12 @@ export async function POST(request) {
     });
 
     await transporter.sendMail({
-      from: `"SAM&CO" <${process.env.GMAIL_USER}>`,
+      from: `"Glowvie" <${process.env.GMAIL_USER}>`,
       to: email,
-      subject: `Your SAM&CO Verification Code: ${otpCode}`,
+      subject: `Your Glowvie Verification Code: ${otpCode}`,
       html: `
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #ffffff; text-align: center; border: 1px solid #eaeaea;">
-          <h1 style="font-size: 24px; font-weight: 300; letter-spacing: 4px; color: #000000; margin-bottom: 30px;">SAM&CO</h1>
+          <h1 style="font-size: 24px; font-weight: 300; letter-spacing: 4px; color: #000000; margin-bottom: 30px;">Glowvie</h1>
           <p style="font-size: 14px; color: #666666; margin-bottom: 30px;">Hi ${name},</p>
           <p style="font-size: 14px; color: #666666; margin-bottom: 40px;">Please use the following 6-digit One-Time Password (OTP) to complete your registration. This code will expire in 30 minutes.</p>
           <div style="background-color: #f9f9f9; border: 1px solid #eaeaea; padding: 20px; margin-bottom: 40px;">

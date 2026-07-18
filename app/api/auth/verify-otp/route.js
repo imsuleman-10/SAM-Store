@@ -55,7 +55,8 @@ export async function POST(request) {
       email_confirm: true,
       user_metadata: {
         full_name: meta.full_name,
-        whatsapp: meta.whatsapp,
+        phone: meta.phone || meta.whatsapp,
+        avatar_url: meta.avatar_url,
         pending_otp: null,
         otp_expires: null,
       }

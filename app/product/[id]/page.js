@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/components/CartContext';
+import { parseDescription } from '@/lib/descriptionUtils';
 
 export default function ProductPage({ params }) {
   const [product, setProduct] = useState(null);
@@ -61,11 +62,7 @@ export default function ProductPage({ params }) {
     return /\.(mp4|webm|ogg|mov)$/i.test(url) || url.includes('video');
   }
 
-  let descObj = { short: '', long: product.description || 'No description available.' };
-  try {
-    const parsed = JSON.parse(product.description);
-    if (parsed.short || parsed.long) descObj = parsed;
-  } catch(e) {}
+  const descObj = parseDescription(product.description, 'No description available.');
 
   const accordions = [
     {

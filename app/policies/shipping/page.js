@@ -1,7 +1,7 @@
 export const metadata = {
-  title: 'Shipping & Return Policy — SAM&CO',
+  title: 'Shipping & Return Policy — Glowvie',
   description:
-    'Learn about SAM&CO shipping process, delivery timelines, quality checks, order cancellations, and our return & exchange policy for Pakistan.',
+    'Learn about Glowvie shipping process, delivery timelines, quality checks, order cancellations, and our return & exchange policy for Pakistan.',
 };
 
 const sections = [

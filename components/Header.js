@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { label: 'Sale',         href: '/collections?cat=sale' },
 ];
 
-const MARQUEE_TEXT = 'DERMATOLOGIST-BACKED SKINCARE · FREE DELIVERY ACROSS PAKISTAN · PREMIUM BEAUTY ESSENTIALS · CLINICALLY PROVEN RESULTS · AUTHENTIC SAM&CO ·';
+const MARQUEE_TEXT = 'DERMATOLOGIST-BACKED SKINCARE · FREE DELIVERY ACROSS PAKISTAN · PREMIUM BEAUTY ESSENTIALS · CLINICALLY PROVEN RESULTS · AUTHENTIC Glowvie ·';
 
 /* ─── Reusable icon components ─────────────────────────────────────────── */
 const IconSearch = () => (
@@ -122,10 +122,18 @@ export default function Header() {
 
   /* scroll listener */
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 8);
+    const handle = () => {
+      const currentScroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      setScrolled(currentScroll > 10);
+    };
     handle();
     window.addEventListener('scroll', handle, { passive: true });
-    return () => window.removeEventListener('scroll', handle);
+    // also listen to resize just in case
+    window.addEventListener('resize', handle, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handle);
+      window.removeEventListener('resize', handle);
+    };
   }, []);
 
   /* body lock when drawer open */
@@ -154,7 +162,7 @@ export default function Header() {
   return (
     <>
       {/* ═══════════════════════════════════════════════════
-          ANNOUNCEMENT BAR
+          ANNOUNCEMENT BAR (scrolls with page)
       ═══════════════════════════════════════════════════ */}
       <div
         className="overflow-hidden whitespace-nowrap flex items-center relative z-50"
@@ -165,7 +173,6 @@ export default function Header() {
         }}
       >
         <div className="flex animate-marquee">
-          {/* Double the text for seamless loop */}
           {[MARQUEE_TEXT, MARQUEE_TEXT].map((t, i) => (
             <span
               key={i}
@@ -188,10 +195,10 @@ export default function Header() {
         <header
           style={{
             width: '100%',
-            transition: 'background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease',
-            background: isTransparent ? 'transparent' : '#fff',
-            borderBottom: isTransparent ? '1px solid rgba(255,255,255,0.12)' : '1px solid #e8e8e8',
-            boxShadow: isTransparent ? 'none' : '0 1px 0 rgba(0,0,0,0.04)',
+            transition: 'background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+            background: isTransparent ? 'transparent' : '#ffffff',
+            borderBottom: isTransparent ? '1px solid rgba(255,255,255,0.12)' : '1px solid #e5e5e5',
+            boxShadow: isTransparent ? 'none' : '0 4px 12px rgba(0,0,0,0.05)',
           }}
         >
           <nav
@@ -229,7 +236,7 @@ export default function Header() {
                   transition: 'color 0.3s ease',
                 }}
               >
-                SAM&amp;CO
+                Glowvie
               </span>
               <span
                 className="hidden lg:block"
@@ -272,15 +279,15 @@ export default function Header() {
 
               {/* Account icon */}
               {user ? (
-                <button
-                  onClick={handleSignOut}
-                  aria-label="Log out"
-                  title="Log out"
+                <Link
+                  href="/account"
+                  aria-label="My Account"
+                  title="My Account"
                   className="flex h-9 w-9 items-center justify-center transition-opacity duration-200 hover:opacity-70"
-                  style={{ color: isTransparent ? 'rgba(255,255,255,0.85)' : '#1a1a1a', background: 'none', border: 'none', cursor: 'pointer' }}
+                  style={{ color: isTransparent ? 'rgba(255,255,255,0.85)' : '#1a1a1a' }}
                 >
                   <IconUser />
-                </button>
+                </Link>
               ) : (
                 <Link
                   href="/login"
@@ -437,7 +444,7 @@ export default function Header() {
             {/* Drawer header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid #f0f0f0' }}>
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.3rem', letterSpacing: '0.32em', fontWeight: 300 }}>
-                SAM&amp;CO
+                Glowvie
               </span>
               <button
                 onClick={() => setMenuOpen(false)}

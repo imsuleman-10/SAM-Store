@@ -1,12 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { cookies } from 'next/headers';
-
-function requireAdmin() {
-  const session = cookies().get('baroque_admin_session');
-  return session && session.value === 'valid';
-}
+import { getAdminSession } from '@/lib/authHelper';
 
 // GET /api/products/:id — public, single product detail
 export async function GET(request, { params }) {
@@ -22,7 +17,14 @@ export async function GET(request, { params }) {
 
 // PUT /api/products/:id — admin only, update a product
 export async function PUT(request, { params }) {
-  if (!requireAdmin()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const session = await getAdminSession();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  if (session.role === 'manager' && !session.permissions?.all_products) {
+    if (!session.permissions?.allowed_products?.includes(Number(params.id)) && !session.permissions?.allowed_products?.includes(params.id)) {
+      return NextResponse.json({ error: 'Forbidden: You do not have permission to modify this product.' }, { status: 403 });
+    }
+  }
 
   const body = await request.json();
   const { name, description, category, price, compare_at_price, image_url, stock, media_urls } = body;
@@ -40,7 +42,14 @@ export async function PUT(request, { params }) {
 
 // DELETE /api/products/:id — admin only
 export async function DELETE(request, { params }) {
-  if (!requireAdmin()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const session = await getAdminSession();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  if (session.role === 'manager' && !session.permissions?.all_products) {
+    if (!session.permissions?.allowed_products?.includes(Number(params.id)) && !session.permissions?.allowed_products?.includes(params.id)) {
+      return NextResponse.json({ error: 'Forbidden: You do not have permission to delete this product.' }, { status: 403 });
+    }
+  }
 
   const { error } = await supabaseAdmin.from('products').delete().eq('id', params.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

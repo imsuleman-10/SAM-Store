@@ -2,10 +2,11 @@ import './globals.css';
 import { CartProvider } from '@/components/CartContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { ConditionalLayout } from '@/components/ConditionalLayout';
 
 export const metadata = {
-  title: 'SAM&CO — Premium Beauty & Grooming',
-  description: 'Discover exclusive beauty and grooming collections by SAM&CO. Premium quality face wash, beard oils, and more, with nationwide cash on delivery.',
+  title: 'Glowvie — Premium Beauty & Grooming',
+  description: 'Discover exclusive beauty and grooming collections by Glowvie. Premium quality face wash, beard oils, and more, with nationwide cash on delivery.',
 };
 
 export default function RootLayout({ children }) {
@@ -13,9 +14,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen bg-white text-black">
         <CartProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <ConditionalLayout header={<Header />} footer={<Footer />}>
+            {children}
+          </ConditionalLayout>
         </CartProvider>
       </body>
     </html>

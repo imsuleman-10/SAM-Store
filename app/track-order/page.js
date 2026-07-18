@@ -37,7 +37,7 @@ export default function TrackOrderPage() {
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-10">
           <h1 className="font-display text-4xl font-light mb-3 text-black">Track Your Order</h1>
-          <p className="text-grey text-sm">Enter your Order ID and Phone Number to check the delivery status of your SAM&CO products.</p>
+          <p className="text-grey text-sm">Enter your Order ID and Phone Number to check the delivery status of your Glowvie products.</p>
         </div>
 
         <div className="bg-sand p-8 rounded-xl border border-border">
