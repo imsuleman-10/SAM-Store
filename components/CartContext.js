@@ -61,7 +61,8 @@ export function CartProvider({ children }) {
   async function loadDbCart(userId) {
     const { data, error } = await supabase
       .from('cart_items')
-      .select('*, product:products(*)');
+      .select('*, product:products(*)')
+      .eq('user_id', userId);
     
     if (!error && data) {
       const dbCart = data.map(item => ({

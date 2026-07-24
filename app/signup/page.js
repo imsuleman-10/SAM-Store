@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 
@@ -11,16 +11,32 @@ const supabase = createClient(
 );
 
 export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[70vh] items-center justify-center"><span className="h-6 w-6 animate-spin rounded-full border-2 border-black border-t-transparent" /></div>}>
+      <SignupContent />
+    </Suspense>
+  );
+}
+
+function SignupContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialEmail = searchParams.get('email') || '';
   
   // Form States
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(initialEmail);
   const [whatsapp, setWhatsapp] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
+
+  useEffect(() => {
+    if (initialEmail && !email) {
+      setEmail(initialEmail);
+    }
+  }, [initialEmail]);
   
   // UI States
   const [step, setStep] = useState(1); // 1 = Details, 2 = OTP

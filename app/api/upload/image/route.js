@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
-const BUCKET_NAME = 'products';
+const BUCKET_NAME = 'images';
 
 export async function POST(request) {
   const formData = await request.formData();
@@ -11,13 +11,15 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Image file is required.' }, { status: 400 });
   }
 
-  // Upload to the root of the 'products' bucket
+  const folder = formData.get('folder') || 'products'; // Default to products if not specified
+  const bucketName = 'images';
+  
   const filename = file.name || `image-${Date.now()}.jpg`;
-  const path = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
+  const path = `${folder}/${Date.now()}-${filename.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
   const buffer = Buffer.from(await file.arrayBuffer());
 
   const { data, error } = await supabaseAdmin.storage
-    .from(BUCKET_NAME)
+    .from(bucketName)
     .upload(path, buffer, { contentType: file.type || 'image/jpeg', upsert: false });
 
   if (error) {

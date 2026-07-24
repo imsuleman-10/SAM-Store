@@ -9,8 +9,26 @@ export const metadata = {
 export default async function ContactPage() {
   const { store_phone, store_email, store_address } = await getStoreSettings();
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'Glowvie',
+    image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://glowvie.vercel.app'}/images/logo.png`,
+    telephone: store_phone,
+    email: store_email,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: store_address,
+      addressCountry: 'PK',
+    },
+  };
+
   return (
     <main className="min-h-[70vh] bg-sand py-20 px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-4xl mx-auto bg-white shadow-soft rounded-2xl overflow-hidden flex flex-col md:flex-row">
         
         {/* Left: Info */}

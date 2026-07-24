@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const COURIER_OPTIONS = ['', 'TCS', 'Leopards', 'M&P', 'Call Courier', 'BlueEx', 'Trax', 'PostEx', 'Stallion', 'Other'];
-const CATEGORIES = ['face-care', 'beard-care', 'hair-care', 'body-care', 'lip-care', 'eye-care', 'fragrances', 'tools'];
+const CATEGORIES = ['face-care', 'hair-care', 'body-care', 'lip-care', 'eye-care', 'fragrances', 'tools'];
 
 const STATUS_META = {
   pending:   { label: 'Pending',   dot: 'bg-amber-400',  badge: 'bg-amber-50 text-amber-700 border-amber-200' },
@@ -173,7 +173,7 @@ function ProfileTab({ staff, setStaff, addToast }) {
       const compressedFile = await compressImage(file, 150);
       const formData = new FormData();
       formData.append('file', compressedFile);
-      formData.append('folder', 'staff');
+      formData.append('folder', 'staffs'); // → images/staffs/
       const res = await fetch('/api/upload', { method: 'POST', body: formData });
       const data = await res.json();
       if (res.ok && data.url) {

@@ -38,10 +38,10 @@ export default function ProductsTab({ state }) {
                   </Select>
                   <Select value={productSort} onChange={e => setProductSort(e.target.value)}>
                     <option value="name">Name A–Z</option>
-                    <option value="price-asc">Price Low–High</option>
-                    <option value="price-desc">Price High–Low</option>
-                    <option value="stock-asc">Stock Low–High</option>
-                    <option value="stock-desc">Stock High–Low</option>
+                    <option value="price_asc">Price Low–High</option>
+                    <option value="price_desc">Price High–Low</option>
+                    <option value="stock_asc">Stock Low–High</option>
+                    <option value="stock_desc">Stock High–Low</option>
                   </Select>
                   {(!me || me.role === 'admin' || me.permissions?.all_products) && (
                     <Link href="/admin/products/new"

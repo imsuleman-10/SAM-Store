@@ -8,23 +8,16 @@ import Link from 'next/link';
 export default function CheckoutPage() {
   const { cart, total, clearCart, user, authLoaded } = useCart();
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', phone: '', whatsapp: '', city: '', address: '' });
+  const [form, setForm] = useState({ name: '', email: user?.email || '', phone: '', whatsapp: '', city: '', address: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (authLoaded && !user) {
-      router.push('/login?redirect=/checkout');
+    if (user?.email && !form.email) {
+      setForm(f => ({ ...f, email: user.email }));
     }
-  }, [user, authLoaded, router]);
-
-  if (!authLoaded || !user) {
-    return (
-      <div className="flex min-h-[70vh] flex-col items-center justify-center">
-        <span className="h-6 w-6 animate-spin rounded-full border-2 border-black border-t-transparent" />
-      </div>
-    );
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.email]);
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -32,7 +25,7 @@ export default function CheckoutPage() {
 
   async function placeOrder() {
     if (!form.name || !form.phone || !form.city || !form.address) {
-      setError('Please fill in all fields before placing your order.');
+      setError('Please fill in all required fields before placing your order.');
       return;
     }
     setSubmitting(true);
@@ -43,7 +36,7 @@ export default function CheckoutPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         items: cart,
-        customer_email: user?.email,
+        customer_email: form.email || user?.email || null,
         customer_name: form.name,
         customer_phone: form.phone,
         customer_whatsapp: form.whatsapp,
@@ -62,7 +55,7 @@ export default function CheckoutPage() {
     }
 
     clearCart();
-    router.push(`/checkout/success?order=${data.order.id.slice(0, 8).toUpperCase()}`);
+    router.push(`/checkout/success?order=${data.order.id.slice(0, 8).toUpperCase()}&email=${encodeURIComponent(form.email || user?.email || '')}`);
   }
 
   if (cart.length === 0) {
@@ -103,6 +96,18 @@ export default function CheckoutPage() {
                     value={form.name}
                     onChange={(e) => update('name', e.target.value)}
                     placeholder="Ahmed Khan"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-[10px] font-medium uppercase tracking-widest text-grey">
+                    Email Address (Optional)
+                  </label>
+                  <input
+                    className="input"
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => update('email', e.target.value)}
+                    placeholder="ahmed@example.com"
                   />
                 </div>
                 <div>
@@ -182,10 +187,10 @@ export default function CheckoutPage() {
               <div className="mb-5 max-h-64 space-y-4 overflow-y-auto">
                 {cart.map((item) => (
                   <div key={item.id} className="flex items-center gap-4">
-                    {item.image_url ? (
+                    {item.media_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={item.image_url}
+                        src={item.media_url}
                         alt={item.name}
                         className="h-14 w-11 shrink-0 object-cover bg-stone"
                       />

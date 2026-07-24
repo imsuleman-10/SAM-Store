@@ -1,17 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('');
-  const [state, setState] = useState('idle'); // idle | loading | success | error | unauth
+  const [state, setState] = useState('idle'); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('');
 
   async function handleSubmit(e) {
@@ -22,12 +15,6 @@ export default function NewsletterForm() {
       return;
     }
     setState('loading');
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      setState('unauth');
-      return;
-    }
 
     try {
       const res = await fetch('/api/subscribe', {
@@ -54,17 +41,6 @@ export default function NewsletterForm() {
       <div className="flex items-center gap-3 rounded-lg border border-white/20 bg-white/5 px-4 py-3">
         <span className="text-green-400">✓</span>
         <p className="text-sm text-warm/80">You&apos;re subscribed! Thank you.</p>
-      </div>
-    );
-  }
-
-  if (state === 'unauth') {
-    return (
-      <div className="flex flex-col gap-2 rounded-lg border border-orange-200/20 bg-orange-500/10 px-4 py-3">
-        <p className="text-sm text-orange-200">Please log in to subscribe to our newsletter.</p>
-        <Link href="/login" className="text-xs font-bold text-white underline underline-offset-4 hover:text-white/70">
-          Go to Login
-        </Link>
       </div>
     );
   }

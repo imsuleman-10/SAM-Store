@@ -4,6 +4,19 @@ import { useRouter } from 'next/navigation';
 export function useAdminState() {
   const router = useRouter();
   const [tab, setTab] = useState('overview');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const saved = localStorage.getItem('adminDashTab');
+    if (saved) setTab(saved);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem('adminDashTab', tab);
+    }
+  }, [tab, isMounted]);
   const [collapsed, setCollapsed] = useState(false);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -104,11 +117,27 @@ export function useAdminState() {
 
   useEffect(() => {
     if (tab === 'settings') {
+      // Load store settings
       setSettingsLoading(true);
       fetch('/api/admin/settings')
         .then(r => r.ok ? r.json() : { settings: {} })
         .then(d => setSettings(d.settings || {}))
         .finally(() => setSettingsLoading(false));
+      // Load hero slides (used in Settings > Hero Slides section)
+      setHeroLoading(true);
+      fetch('/api/admin/hero-slides', { credentials: 'include' })
+        .then(async r => {
+          if (r.ok) return r.json();
+          const errData = await r.json().catch(() => ({}));
+          throw new Error(errData.error || `Failed to fetch: ${r.status}`);
+        })
+        .then(d => {
+          const mapped = (d.slides || []).map(s => ({ ...s, image: s.image_url, sub: s.subtitle, link: s.link_url }));
+          setHeroSlides(mapped);
+          heroSlidesRef.current = mapped;
+        })
+        .catch(err => { console.error(err); setHeroSlides([]); heroSlidesRef.current = []; addToast(err.message, 'error'); })
+        .finally(() => setHeroLoading(false));
     }
     if (tab === 'users') {
       setUsersLoading(true);
@@ -130,22 +159,6 @@ export function useAdminState() {
         .then(r => r.ok ? r.json() : { staff: [] })
         .then(d => setStaff(d.staff || []))
         .finally(() => setStaffLoading(false));
-    }
-    if (tab === 'hero') {
-      setHeroLoading(true);
-      fetch('/api/admin/hero-slides', { credentials: 'include' })
-        .then(async r => {
-          if (r.ok) return r.json();
-          const errData = await r.json().catch(() => ({}));
-          throw new Error(errData.error || `Failed to fetch: ${r.status}`);
-        })
-        .then(d => {
-          const mapped = (d.slides || []).map(s => ({ ...s, image: s.image_url, sub: s.subtitle, link: s.link_url }));
-          setHeroSlides(mapped);
-          heroSlidesRef.current = mapped;
-        })
-        .catch(err => { console.error(err); setHeroSlides([]); heroSlidesRef.current = []; addToast(err.message, 'error'); })
-        .finally(() => setHeroLoading(false));
     }
     if (tab === 'media') {
       loadMediaItems();
@@ -205,6 +218,26 @@ export function useAdminState() {
       addToast('Upload error.', 'error');
     }
   }
+  async function handleFaviconUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    addToast('Uploading favicon…', 'info');
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('folder', 'admin');
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        setSettings(p => ({ ...p, store_favicon: data.url }));
+        addToast('Favicon uploaded. Click "Save All Settings" to confirm.', 'success');
+      } else {
+        addToast(data.error || 'Upload failed.', 'error');
+      }
+    } catch {
+      addToast('Upload error.', 'error');
+    }
+  }
   async function updateStock(productId, stock) {
     await fetch(`/api/products/${productId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stock }) });
     loadData();
@@ -225,7 +258,7 @@ export function useAdminState() {
     else { addToast('Failed to remove.', 'error'); }
   }
   function exportSubscribersCSV() {
-    const csv = ['Email,Status,Joined', ...subscribers.map(s => `${s.email},${s.status},${formatDate(s.created_at)}`)].join('\\n');
+    const csv = ['Email,Status,Joined', ...subscribers.map(s => `${s.email},${s.status},${formatDate(s.created_at)}`)].join('\n');
     const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv); a.download = 'subscribers.csv'; a.click();
   }
 
@@ -542,6 +575,7 @@ export function useAdminState() {
     else if (productSort === 'price_asc') list.sort((a, b) => Number(a.price) - Number(b.price));
     else if (productSort === 'price_desc') list.sort((a, b) => Number(b.price) - Number(a.price));
     else if (productSort === 'stock_asc') list.sort((a, b) => Number(a.stock) - Number(b.stock));
+    else if (productSort === 'stock_desc') list.sort((a, b) => Number(b.stock) - Number(a.stock));
     return list;
   }, [products, productCategory, productSearch, productSort]);
 
@@ -588,6 +622,7 @@ export function useAdminState() {
     staff,
     settings,
     heroSlides,
+    setHeroSlides,
     mediaItems,
     tab,
     setTab,
@@ -641,6 +676,7 @@ export function useAdminState() {
     setSettings,
     saveSettings,
     handleLogoUpload,
+    handleFaviconUpload,
     heroLoading,
     heroSaving,
     saveAllHeroSlides,
@@ -667,6 +703,7 @@ export function useAdminState() {
     showGlobal,
     globalResults,
     selectedMedia,
-    toasts
+    toasts,
+    isMounted
   };
 }

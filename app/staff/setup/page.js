@@ -75,7 +75,7 @@ export default function StaffSetupPage() {
     const compressedFile = await compressImage(file, 150);
     const formData = new FormData();
     formData.append('file', compressedFile);
-    formData.append('folder', 'staff');
+    formData.append('folder', 'staffs'); // → images/staffs/
     const res = await fetch('/api/upload', { method: 'POST', body: formData });
     const data = await res.json();
     if (!res.ok || !data.url) throw new Error(data.error || 'Upload failed');

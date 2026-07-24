@@ -45,7 +45,11 @@ export default function MediaTab({ state }) {
           external: { label: 'External', bg: 'bg-gray-500' },
         };
         
-        const filteredMedia = mediaFilter === 'all' ? mediaItems : mediaItems.filter(item => item.category === mediaFilter);
+        const filteredMedia = mediaFilter === 'all' 
+          ? mediaItems 
+          : mediaFilter === 'external' 
+            ? mediaItems.filter(item => item.source === 'external')
+            : mediaItems.filter(item => item.category === mediaFilter);
         
         function downloadImage(url, filename) {
           const a = document.createElement('a');

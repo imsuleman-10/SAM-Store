@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { label: 'Sale',         href: '/collections?cat=sale' },
 ];
 
-const MARQUEE_TEXT = 'DERMATOLOGIST-BACKED SKINCARE · FREE DELIVERY ACROSS PAKISTAN · PREMIUM BEAUTY ESSENTIALS · CLINICALLY PROVEN RESULTS · AUTHENTIC Glowvie ·';
+const MARQUEE_TEXT = 'EXPERTLY FORMULATED SKINCARE · FREE DELIVERY ACROSS PAKISTAN · PREMIUM BEAUTY ESSENTIALS · VISIBLE RESULTS · AUTHENTIC Glowvie ·';
 
 /* ─── Reusable icon components ─────────────────────────────────────────── */
 const IconSearch = () => (
@@ -65,6 +65,14 @@ function NavLink({ href, label, isTransparent, pathname }) {
       href={href}
       className="group relative flex items-center"
       style={{ padding: '4px 0' }}
+      onMouseEnter={e => {
+        const underline = e.currentTarget.querySelector('[data-underline]');
+        if (underline) underline.style.width = '100%';
+      }}
+      onMouseLeave={e => {
+        const underline = e.currentTarget.querySelector('[data-underline]');
+        if (underline) underline.style.width = isActive ? '100%' : '0%';
+      }}
     >
       <span
         className="text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-200"
@@ -74,16 +82,13 @@ function NavLink({ href, label, isTransparent, pathname }) {
       </span>
       {/* Animated underline */}
       <span
+        data-underline="true"
         className="absolute bottom-0 left-0 h-px transition-all duration-300"
         style={{
           width: isActive ? '100%' : '0%',
           background: isTransparent ? '#fff' : '#000',
         }}
       />
-      {/* Hover underline via CSS trick */}
-      <style jsx>{`
-        .group:hover span:last-child { width: 100% !important; }
-      `}</style>
     </Link>
   );
 }
@@ -250,7 +255,7 @@ export default function Header() {
                   transition: 'color 0.3s ease',
                 }}
               >
-                Est. 2020
+                PREMIUM SKINCARE
               </span>
             </Link>
 

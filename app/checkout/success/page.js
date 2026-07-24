@@ -3,6 +3,7 @@
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useCart } from '@/components/CartContext';
 
 export default function SuccessPage() {
   return (
@@ -15,6 +16,8 @@ export default function SuccessPage() {
 function SuccessContent() {
   const params = useSearchParams();
   const orderId = params.get('order');
+  const email = params.get('email') || '';
+  const { user, authLoaded } = useCart();
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center bg-white px-5 py-16">
@@ -66,6 +69,17 @@ function SuccessContent() {
             </div>
           ))}
         </div>
+
+        {/* Guest Signup Prompt */}
+        {authLoaded && !user && (
+          <div className="mb-8 border border-border bg-sand p-6 text-center">
+            <h3 className="font-display text-xl text-black mb-2">Save Your Order History</h3>
+            <p className="text-sm text-grey mb-4">Create an account to track this order and enjoy faster checkouts in the future.</p>
+            <Link href={`/signup?email=${encodeURIComponent(email)}`} className="btn bg-black text-white hover:bg-grey px-6 py-2 block w-full text-center">
+              Create an Account
+            </Link>
+          </div>
+        )}
 
         <Link href="/" className="btn btn-primary block w-full text-center">
           Continue Shopping

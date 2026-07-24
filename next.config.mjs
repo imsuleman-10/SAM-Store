@@ -10,7 +10,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'ibb.co' },
     ],
   },
-  allowedDevOrigins: ['*'],
+  allowedDevOrigins: ['localhost', '192.168.100.10'],
 };
 
 export default nextConfig;

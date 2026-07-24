@@ -39,10 +39,10 @@ export function Btn({ children, variant = 'secondary', size = 'sm', onClick, dis
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 export const COURIER_OPTIONS = ['', 'TCS', 'Leopards', 'M&P', 'Call Courier', 'BlueEx', 'Trax', 'PostEx', 'Stallion', 'Other'];
-export const CATEGORIES = ['face-care', 'beard-care', 'hair-care', 'body-care', 'lip-care', 'eye-care', 'fragrances', 'tools'];
+export const CATEGORIES = ['face-care', 'hair-care', 'body-care', 'lip-care', 'eye-care', 'fragrances', 'tools'];
 
 export const DEFAULT_HERO_SLIDES = [
-  { image: '/images/products/dermive_hero_desktop.png', heading: 'Dermatologist-Backed Skincare Solutions', sub: 'DermiVe Moisturizing Wash' },
+  { image: '/images/products/dermive_hero_desktop.png', heading: 'Expertly Formulated Skincare Solutions', sub: 'DermiVe Moisturizing Wash' },
   { image: '/images/products/roots_hero_desktop.png', heading: 'Transform Your Hair', sub: 'Roots Hair Treatment Serum' },
   { image: '/images/products/relax_hero_desktop.png', heading: 'Reveal Your True Glow', sub: 'Relax Vitamin C Serum' },
   { image: '/images/products/markaway_hero_desktop.png', heading: 'Restore Skin Confidence', sub: 'Markaway Stretch Mark Serum' },

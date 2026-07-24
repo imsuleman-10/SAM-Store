@@ -2,21 +2,18 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { getAdminSession } from '@/lib/authHelper';
 
-// All folders and buckets we track in the media library
+// 2-bucket structure:
+// images bucket → subfolders: customers, admin, staffs, hero_slides, products, results
+// videos bucket → subfolders: products, homepage
 const FOLDERS = [
-  // New separated buckets
-  { bucket: 'products',    folder: '', category: 'product' },
-  { bucket: 'hero_slides', folder: '', category: 'hero' },
-  { bucket: 'staffs',      folder: '', category: 'staff' },
-  { bucket: 'customers',   folder: '', category: 'customer' },
-  { bucket: 'admin',       folder: '', category: 'admin' },
-  // Legacy paths
   { bucket: 'images', folder: 'products',    category: 'product'    },
-  { bucket: 'images', folder: 'hero_slides', category: 'hero' },
-  { bucket: 'images', folder: 'staff',       category: 'staff'      },
+  { bucket: 'images', folder: 'hero_slides', category: 'hero'       },
+  { bucket: 'images', folder: 'staffs',      category: 'staff'      },
   { bucket: 'images', folder: 'customers',   category: 'customer'   },
   { bucket: 'images', folder: 'admin',       category: 'admin'      },
+  { bucket: 'images', folder: 'results',     category: 'result'     },
   { bucket: 'videos', folder: 'products',    category: 'product'    },
+  { bucket: 'videos', folder: 'homepage',    category: 'homepage'   },
 ];
 
 export async function GET() {
@@ -95,22 +92,24 @@ export async function POST(request) {
   const file = formData.get('image');
   if (!file || typeof file === 'string') return NextResponse.json({ error: 'Image file required.' }, { status: 400 });
 
-  // Caller must pass 'folder' to specify destination; default to 'admin'
+  // 2-bucket structure:
+  // - All images → 'images' bucket / subfolder (customers, admin, staffs, hero_slides, products, results)
+  // - Videos → 'videos' bucket handled separately
   const folder = formData.get('folder') || 'admin';
-  const targetBucket = ['products', 'hero_slides', 'staffs', 'customers', 'admin'].includes(folder) ? folder : 'images';
-  const targetFolder = targetBucket === 'images' ? folder : ''; // Use root for the new buckets
+  const VALID_IMAGE_FOLDERS = ['customers', 'admin', 'staffs', 'hero_slides', 'products', 'results'];
+  const targetFolder = VALID_IMAGE_FOLDERS.includes(folder) ? folder : 'admin';
 
   const filename = `${Date.now()}-${(file.name || 'image.jpg').replace(/[^a-zA-Z0-9.\-_]/g, '_')}`;
-  const path = targetFolder ? `${targetFolder}/${filename}` : filename;
+  const path = `${targetFolder}/${filename}`;
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  const { error } = await supabaseAdmin.storage.from(targetBucket).upload(path, buffer, {
+  const { error } = await supabaseAdmin.storage.from('images').upload(path, buffer, {
     contentType: file.type || 'image/jpeg',
     upsert: false,
   });
   if (error) return NextResponse.json({ error: error.message || 'Upload failed.' }, { status: 500 });
 
-  const { data: urlData } = supabaseAdmin.storage.from(targetBucket).getPublicUrl(path);
+  const { data: urlData } = supabaseAdmin.storage.from('images').getPublicUrl(path);
   return NextResponse.json({ url: urlData.publicUrl });
 }
 

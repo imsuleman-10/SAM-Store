@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'About Us — Glowvie',
-  description: 'The story behind Glowvie, Pakistan\'s premium grooming and beauty brand.',
+  description: 'The story behind Glowvie, Pakistan\'s premium grooming and beauty brand offering expertly formulated skincare, hair care, and body care products.',
 };
 
 export default function AboutPage() {
@@ -15,7 +15,7 @@ export default function AboutPage() {
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 text-center text-white px-5">
-          <p className="text-[11px] uppercase tracking-[0.3em] mb-4 text-white/80">Est. 2020</p>
+          <p className="text-[11px] uppercase tracking-[0.3em] mb-4 text-white/80">Premium Skincare</p>
           <h1 className="font-display text-4xl md:text-5xl font-light tracking-wide">Our Story</h1>
         </div>
       </section>
@@ -29,7 +29,7 @@ export default function AboutPage() {
             Founded with a vision to bring premium, high-quality grooming and beauty essentials to Pakistan, <strong className="text-black font-medium">Glowvie</strong> is more than just a brand—it's a lifestyle. We believe that self-care is not a luxury, but a necessity, and everyone deserves products that look elegant and deliver real results.
           </p>
           <p>
-            From our signature Face Care formulations to our meticulously crafted Beard Oils, every product in our lineup is designed with modern aesthetics and supreme functionality in mind. We source the finest ingredients to ensure that your skin and hair receive the nourishment they deserve.
+            From our signature Face Care formulations to our meticulously crafted Serums, every product in our lineup is designed with modern aesthetics and supreme functionality in mind. We source the finest ingredients to ensure that your skin and hair receive the nourishment they deserve.
           </p>
           <p>
             At Glowvie, we take pride in our uncompromising standards. Whether you're preparing for a boardroom meeting or winding down after a long day, our products are built to elevate your routine. We are committed to transparency, quality, and an exceptional customer experience.

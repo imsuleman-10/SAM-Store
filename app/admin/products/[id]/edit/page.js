@@ -74,6 +74,7 @@ export default function EditProductPage({ params }) {
   async function uploadImage(file) {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('folder', 'products'); // → images/products/
 
     const res = await fetch('/api/upload/image', {
       method: 'POST',
@@ -182,6 +183,7 @@ export default function EditProductPage({ params }) {
       try {
         const videoForm = new FormData();
         videoForm.append('file', videoFile);
+        videoForm.append('folder', 'products'); // → videos/products/
         const uploadRes = await fetch('/api/upload/video', { method: 'POST', body: videoForm });
         const videoData = await uploadRes.json();
 
@@ -416,7 +418,7 @@ export default function EditProductPage({ params }) {
               >
                 <option value="">-- Select Category --</option>
                 <option value="face-care">Face Care</option>
-                <option value="beard-care">Beard Care</option>
+
                 <option value="hair-care">Hair Care</option>
                 <option value="body-care">Body Care</option>
                 <option value="lip-care">Lip Care</option>

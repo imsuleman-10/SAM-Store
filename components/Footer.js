@@ -6,7 +6,6 @@ const FOOTER_LINKS = {
   Collections: [
     { label: 'New Arrivals', href: '/collections?cat=new' },
     { label: 'Face Care',    href: '/collections?cat=face-care' },
-    { label: 'Beard Care',   href: '/collections?cat=beard-care' },
     { label: 'Hair Care',    href: '/collections?cat=hair-care' },
     { label: 'Body Care',    href: '/collections?cat=body-care' },
     { label: 'Sale',         href: '/collections?cat=sale' },
@@ -59,8 +58,8 @@ export default async function Footer() {
               </div>
             )}
 
-            {/* Social icons */}
-            <div className="flex items-center gap-3">
+            {/* Social icons - Hidden until real handles are provided */}
+            {/* <div className="flex items-center gap-3">
               {[
                 { label: 'Instagram', icon: (
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
@@ -81,7 +80,7 @@ export default async function Footer() {
                   {icon}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Collections */}

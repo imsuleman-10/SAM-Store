@@ -247,7 +247,7 @@ export default function AccountPage() {
                             {order.status}
                           </span>
                         </td>
-                        <td className="py-4 text-right font-medium">Rs. {order.total}</td>
+                        <td className="py-4 text-right font-medium">Rs {Number(order.total).toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>

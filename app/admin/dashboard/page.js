@@ -15,13 +15,13 @@ import SubscribersTab from './tabs/SubscribersTab';
 import StaffTab from './tabs/StaffTab';
 import SettingsTab from './tabs/SettingsTab';
 import MediaTab from './tabs/MediaTab';
-import HeroTab from './tabs/HeroTab';
+
 import { ProfileTab } from './components/ProfileTab';
 
 export default function AdminDashboard() {
   const state = useAdminState();
 
-  if (!state) return null;
+  if (!state || !state.isMounted) return null;
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900 overflow-hidden font-sans">
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
             {state.tab === 'subscribers' && <SubscribersTab state={state} />}
             {state.tab === 'staff' && <StaffTab state={state} />}
             {state.tab === 'settings' && <SettingsTab state={state} />}
-            {state.tab === 'hero' && <HeroTab state={state} />}
+
             {state.tab === 'media' && <MediaTab state={state} />}
             {state.tab === 'profile' && <ProfileTab me={state.me} setMe={state.setMe} addToast={state.addToast} />}
           </div>
