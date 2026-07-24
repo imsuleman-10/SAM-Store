@@ -66,6 +66,9 @@ export async function generateMetadata() {
       description: 'Premium skincare & beauty products with Cash on Delivery across Pakistan.',
       images: ['/images/og-default.jpg'],
     },
+    verification: {
+      google: 'f0CqrDaQxzLPdmDKhFJf0U6OC-KINAkyUxmw__AU_So',
+    },
     icons: {
       icon: favicon,
       apple: favicon,
