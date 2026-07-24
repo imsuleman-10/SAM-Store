@@ -6,8 +6,8 @@ import CollectionsShell from './CollectionsShell';
 export const revalidate = 0; // Ensure fresh data on every request
 
 export const metadata = {
-  title: 'All Collections — Glowvie',
-  description: 'Browse all premium skincare, hair care, and beauty products by Glowvie.',
+  title: 'Buy Premium Skincare, Serums & Face Wash Online in Pakistan | Glowvie',
+  description: 'Shop the best premium skincare, face wash, serums, hair care, and body care products online in Pakistan with Glowvie. Cash on Delivery available nationwide.',
 };
 
 function getSupabase() {

@@ -58,29 +58,32 @@ export default async function Footer() {
               </div>
             )}
 
-            {/* Social icons - Hidden until real handles are provided */}
-            {/* <div className="flex items-center gap-3">
+            {/* Social icons */}
+            <div className="flex items-center gap-3">
               {[
-                { label: 'Instagram', icon: (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                )},
-                { label: 'Facebook', icon: (
+                { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61592271981284', icon: (
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
                 )},
-                { label: 'TikTok', icon: (
+                { label: 'Instagram', href: 'https://www.instagram.com/glowviestore/', icon: (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                )},
+                { label: 'TikTok', href: 'https://www.tiktok.com/@glowviestore', icon: (
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></svg>
                 )},
-              ].map(({ label, icon }) => (
+              ].map(({ label, href, icon }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="flex h-9 w-9 items-center justify-center border border-white/20 text-white/60 transition hover:border-white/60 hover:text-white"
                 >
                   {icon}
                 </a>
               ))}
-            </div> */}
+            </div>
+
           </div>
 
           {/* Collections */}

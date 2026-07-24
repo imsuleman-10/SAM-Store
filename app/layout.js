@@ -76,12 +76,12 @@ export async function generateMetadata() {
   };
 }
 
-// JSON-LD: Organization + WebSite schema — picked up by Google and AI engines
+// JSON-LD: Organization, WebSite, and LocalBusiness schemas — optimized for SEO, GEO, AEO, and LLMO
 const orgJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'Organization',
+      '@type': 'HealthAndBeautyBusiness',
       '@id': `${BASE_URL}/#organization`,
       name: 'Glowvie',
       url: BASE_URL,
@@ -89,25 +89,45 @@ const orgJsonLd = {
         '@type': 'ImageObject',
         url: `${BASE_URL}/images/logo.png`,
       },
+      image: `${BASE_URL}/images/og-default.jpg`,
+      description:
+        'Glowvie is a premium Pakistani beauty and skincare brand offering dermatologist-approved face care, hair care, serums, and body care products with nationwide Cash on Delivery.',
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'PK',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: '30.3753', // Center of Pakistan approx
+        longitude: '69.3451'
+      },
       contactPoint: {
         '@type': 'ContactPoint',
-        contactType: 'customer service',
+        contactType: 'Customer Service',
         availableLanguage: ['English', 'Urdu'],
         areaServed: 'PK',
+        contactOption: 'TollFree'
       },
+      sameAs: [
+        'https://www.facebook.com/profile.php?id=61592271981284',
+        'https://www.instagram.com/glowviestore/',
+        'https://www.tiktok.com/@glowviestore'
+      ],
+      priceRange: '₨',
+      paymentAccepted: 'Cash on Delivery',
       areaServed: {
         '@type': 'Country',
         name: 'Pakistan',
       },
-      description:
-        'Glowvie is a premium Pakistani beauty and skincare brand offering face care, hair care, serums, and body care products with nationwide Cash on Delivery.',
     },
     {
       '@type': 'WebSite',
       '@id': `${BASE_URL}/#website`,
       url: BASE_URL,
-      name: 'Glowvie',
+      name: 'Glowvie Official Store',
+      description: 'Shop premium skincare and beauty products in Pakistan.',
       publisher: { '@id': `${BASE_URL}/#organization` },
+      inLanguage: 'en-PK',
       potentialAction: {
         '@type': 'SearchAction',
         target: {
@@ -117,8 +137,30 @@ const orgJsonLd = {
         'query-input': 'required name=search_term_string',
       },
     },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${BASE_URL}/#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Collections', item: `${BASE_URL}/collections` },
+        { '@type': 'ListItem', position: 3, name: 'Contact Us', item: `${BASE_URL}/contact` }
+      ]
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      '@id': `${BASE_URL}/#navigation`,
+      name: 'Main Navigation',
+      url: BASE_URL,
+      hasPart: [
+        { '@type': 'WebPage', name: 'Face Care', url: `${BASE_URL}/collections?cat=face-care` },
+        { '@type': 'WebPage', name: 'Hair Care', url: `${BASE_URL}/collections?cat=hair-care` },
+        { '@type': 'WebPage', name: 'Body Care', url: `${BASE_URL}/collections?cat=body-care` },
+        { '@type': 'WebPage', name: 'Sale', url: `${BASE_URL}/collections?cat=sale` }
+      ]
+    }
   ],
 };
+
 
 export default function RootLayout({ children }) {
   return (

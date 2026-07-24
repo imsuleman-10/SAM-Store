@@ -163,7 +163,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-screen-xl px-5 py-16 md:px-8 lg:px-12 lg:py-20">
         <div className="mb-10 text-center">
           <p className="section-label mb-3">Browse by category</p>
-          <h2 className="section-title text-3xl text-black md:text-4xl">Our Collections</h2>
+          <h2 className="section-title text-3xl text-black md:text-4xl">Premium Skincare & Beauty Collections</h2>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -199,7 +199,7 @@ export default async function HomePage() {
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="section-label mb-3">Featured edit</p>
-              <h2 className="section-title text-3xl text-black md:text-4xl">Customer Favourites</h2>
+              <h2 className="section-title text-3xl text-black md:text-4xl">Best-Selling Skincare Products in Pakistan</h2>
             </div>
             <Link href="/collections" className="text-[11px] font-medium uppercase tracking-widest text-charcoal underline-offset-4 hover:underline">
               View all →
@@ -226,7 +226,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-screen-xl px-5 md:px-8 lg:px-12">
             <div className="mb-12 text-center">
               <p className="section-label mb-3">Watch & Learn</p>
-              <h2 className="section-title text-3xl text-black md:text-4xl">See the Magic Happen</h2>
+              <h2 className="section-title text-3xl text-black md:text-4xl">Skincare Application Tips & Video Reviews</h2>
               <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-grey">
                 Watch how our products work, application tips, and real customer reviews.
               </p>
@@ -253,7 +253,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-screen-xl px-5 md:px-8 lg:px-12">
           <div className="mb-12 text-center">
             <p className="section-label mb-3">Product Demos</p>
-            <h2 className="section-title text-3xl text-black md:text-4xl">See How It Works</h2>
+            <h2 className="section-title text-3xl text-black md:text-4xl">Real Customer Results & Dermatological Demos</h2>
             <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-grey">
               Discover how our products are applied and the visible difference they can make in your daily routine.
             </p>
