@@ -104,13 +104,47 @@ export default async function ProductPage({ params }) {
     },
   ];
 
-  const jsonLd = {
+  const reviews = [
+    {
+      author: { '@type': 'Person', name: "Ayesha M." },
+      name: "Ayesha M.",
+      reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5 },
+      stars: 5,
+      headline: "Incredible difference",
+      reviewBody: "I've struggled with finding products that don't irritate my skin. This has been a game changer. I noticed results within the first two weeks."
+    },
+    {
+      author: { '@type': 'Person', name: "Fatima K." },
+      name: "Fatima K.",
+      reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5 },
+      stars: 5,
+      headline: "Highly recommended!",
+      reviewBody: "The texture is perfect and it absorbs so quickly. It doesn't feel greasy at all. My confidence has honestly improved so much since I started using this."
+    },
+    {
+      author: { '@type': 'Person', name: "Sara A." },
+      name: "Sara A.",
+      reviewRating: { '@type': 'Rating', ratingValue: 4, bestRating: 5 },
+      stars: 4,
+      headline: "Works really well",
+      reviewBody: "Very satisfied with the quality. The packaging is premium and the product does exactly what it claims. Will definitely be repurchasing."
+    }
+  ];
+
+  const totalStars = reviews.reduce((acc, r) => acc + r.stars, 0);
+  const averageRating = (totalStars / reviews.length).toFixed(1);
+
+  const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     image: allMedia[0] || '',
     description: descObj.short || descObj.long,
     sku: product.id,
+    brand: {
+      '@type': 'Brand',
+      name: 'Glowvie'
+    },
     offers: {
       '@type': 'Offer',
       url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://glowvie.vercel.app'}/product/${product.id}`,
@@ -119,13 +153,40 @@ export default async function ProductPage({ params }) {
       itemCondition: 'https://schema.org/NewCondition',
       availability: product.stock !== 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
     },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: averageRating,
+      reviewCount: reviews.length
+    },
+    review: reviews.map(r => ({
+      '@type': 'Review',
+      reviewRating: r.reviewRating,
+      author: r.author,
+      name: r.headline,
+      reviewBody: r.reviewBody
+    }))
   };
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: accordions.map(a => ({
+      '@type': 'Question',
+      name: a.label,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: a.content
+      }
+    }))
+  };
+
+  const schemas = [productJsonLd, faqJsonLd];
 
   return (
     <div className="bg-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
       {/* Breadcrumb — SSR for SEO */}
       <div className="border-b border-border">
@@ -193,32 +254,13 @@ export default async function ProductPage({ params }) {
           </div>
           
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                name: "Ayesha M.",
-                stars: 5,
-                title: "Incredible difference",
-                text: "I've struggled with finding products that don't irritate my skin. This has been a game changer. I noticed results within the first two weeks."
-              },
-              {
-                name: "Fatima K.",
-                stars: 5,
-                title: "Highly recommended!",
-                text: "The texture is perfect and it absorbs so quickly. It doesn't feel greasy at all. My confidence has honestly improved so much since I started using this."
-              },
-              {
-                name: "Sara A.",
-                stars: 4,
-                title: "Works really well",
-                text: "Very satisfied with the quality. The packaging is premium and the product does exactly what it claims. Will definitely be repurchasing."
-              }
-            ].map((review, i) => (
+            {reviews.map((review, i) => (
               <div key={i} className="border border-border bg-sand p-6 flex flex-col gap-3">
                 <div className="flex text-gold text-sm">
                   {"★".repeat(review.stars)}{"☆".repeat(5 - review.stars)}
                 </div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-black">{review.title}</p>
-                <p className="text-sm text-charcoal leading-relaxed">"{review.text}"</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-black">{review.headline}</p>
+                <p className="text-sm text-charcoal leading-relaxed">"{review.reviewBody}"</p>
                 <p className="text-xs text-silver mt-auto pt-4 border-t border-border">
                   {review.name} <span className="text-green-600 ml-1">✓ Verified</span>
                 </p>

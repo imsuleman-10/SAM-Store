@@ -8,6 +8,11 @@ export const revalidate = 0; // Ensure fresh data on every request
 export const metadata = {
   title: 'Buy Premium Skincare, Serums & Face Wash Online in Pakistan | Glowvie',
   description: 'Shop the best premium skincare, face wash, serums, hair care, and body care products online in Pakistan with Glowvie. Cash on Delivery available nationwide.',
+  openGraph: {
+    title: 'Glowvie Collections — Premium Skincare in Pakistan',
+    description: 'Shop the best premium skincare, face wash, and serums online.',
+    images: ['/images/og-default.jpg'],
+  }
 };
 
 function getSupabase() {
